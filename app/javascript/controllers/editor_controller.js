@@ -1,22 +1,108 @@
+// app/javascript/controllers/editor_controller.js
+
 import { Controller } from "@hotwired/stimulus"
 import { Editor } from "@tiptap/core"
+import { TextSelection } from 'prosemirror-state'
+
+// --- Tiptap Extensions ---
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
-import Heading from "@tiptap/extension-heading"
-import Bold from "@tiptap/extension-bold"
-import Italic from "@tiptap/extension-italic"
-import Strike from "@tiptap/extension-strike"
-import Underline from "@tiptap/extension-underline"
 import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
-import Blockquote from "@tiptap/extension-blockquote"
-import CodeBlock from "@tiptap/extension-code-block"
-import ListItem from "@tiptap/extension-list-item"
-import BulletList from "@tiptap/extension-bullet-list"
-import OrderedList from "@tiptap/extension-ordered-list"
-import HorizontalRule from "@tiptap/extension-horizontal-rule"
 import TextAlign from "@tiptap/extension-text-align"
+import { Table } from "@tiptap/extension-table"
+import { TableRow } from "@tiptap/extension-table-row"
+import { TableHeader } from "@tiptap/extension-table-header"
+import { TableCell } from "@tiptap/extension-table-cell"
 
+// --- Кастомная команда для вставки таблицы с атрибутами ---
+// Эта функция-помощник создаёт таблицу с заданными опциями и атрибутами (например, CSS-классами).
+const insertTableWithAttributes = (options, attributes = {}) => ({ tr, dispatch, editor }) => {
+  const { schema } = editor.state;
+  const { rows, cols, withHeaderRow } = options;
+
+  const createCell = (cellType, cellAttrs) => {
+    const cellContent = schema.nodes.paragraph.create();
+    return schema.nodes[cellType].create(cellAttrs, cellContent);
+  };
+
+  const createRow = (cellType, cellAttrs) => {
+    const cells = Array.from({ length: cols }, () => createCell(cellType, cellAttrs));
+    return schema.nodes.tableRow.create(null, cells);
+  };
+
+  const tableRows = [];
+  if (withHeaderRow) {
+    tableRows.push(createRow('tableHeader', attributes.header));
+  }
+
+  const dataRowsCount = withHeaderRow ? rows - 1 : rows;
+  for (let i = 0; i < dataRowsCount; i++) {
+    tableRows.push(createRow('tableCell', attributes.cell));
+  }
+
+  const table = schema.nodes.table.create(attributes.table, tableRows);
+
+  if (dispatch) {
+    const offset = tr.selection.anchor + 1;
+    tr.replaceSelectionWith(table)
+      .setSelection(TextSelection.create(tr.doc, offset));
+    dispatch(tr);
+  }
+
+  return true;
+};
+
+// --- 1. Extend TableCell to allow the 'style' attribute ---
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      // Keep the default attributes
+      ...this.parent?.(),
+      // Add 'style'
+      style: {
+        default: null,
+      },
+    };
+  },
+});
+
+// --- 2. Extend TableHeader similarly ---
+const CustomTableHeader = TableHeader.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      style: {
+        default: null,
+      },
+    };
+  },
+});
+
+// --- 3. Extend Table and add back `addAttributes` alongside `addCommands` ---
+const CustomTable = Table.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      // Add back 'style' and 'class' for flexibility
+      style: {
+        default: null,
+      },
+      class: {
+        default: null,
+      }
+    };
+  },
+  addCommands() {
+    return {
+      ...this.parent?.(),
+      insertTableWithAttributes: insertTableWithAttributes,
+    };
+  },
+});
+
+
+// --- Stimulus Controller ---
 export default class extends Controller {
   static targets = ["element", "input", "fileInput", "form"]
 
@@ -24,100 +110,17 @@ export default class extends Controller {
     this.editor = new Editor({
       element: this.elementTarget,
       extensions: [
-        StarterKit.configure({ 
-          heading: {
-            levels: [1, 2, 3]
-          }
-        }),
-        Heading.extend({
-          addAttributes() {
-            return {
-              ...this.parent?.(),
-              style: {
-                default: null,
-                renderHTML: (attributes) => {
-                  const level = attributes.level
-                  switch(level) {
-                    case 1:
-                      return { style: "font-size: 24px; font-weight: bold; color: #000000;" }
-                    case 2:
-                      return { style: "font-size: 20px; font-weight: bold; color: #000000;" }
-                    case 3:
-                      return { style: "font-size: 16px; font-weight: bold; color: #000000;" }
-                    default:
-                      return {}
-                  }
-                }
-              }
-            }
-          }
-        }).configure({ levels: [1, 2, 3] }),
-        Placeholder.configure({ placeholder: "Start writing..." }),
-        Bold.configure({
-          HTMLAttributes: {
-            style: "font-weight: bold;"
-          }
-        }),
-        Italic.configure({
-          HTMLAttributes: {
-            style: "font-style: italic;"
-          }
-        }),
-        Strike.configure({
-          HTMLAttributes: {
-            style: "text-decoration: line-through;"
-          }
-        }),
-        Underline.configure({
-          HTMLAttributes: {
-            style: "text-decoration: underline;"
-          }
-        }),
-        Link.configure({ 
-          openOnClick: true,
-          HTMLAttributes: {
-            style: "color: #0066cc; text-decoration: underline;"
-          }
-        }),
-        Image.configure({
-          HTMLAttributes: {
-            style: "max-width: 100%; height: auto; margin: 1rem 0;"
-          }
-        }),
-        Blockquote.configure({
-          HTMLAttributes: {
-            style: "border-left: 4px solid #e2e8f0; padding-left: 1rem; margin: 1rem 0; font-style: italic;"
-          }
-        }),
-        CodeBlock.configure({
-          HTMLAttributes: {
-            style: "background-color: #f7fafc; padding: 1rem; border-radius: 4px; font-family: monospace;"
-          }
-        }),
-        ListItem.configure({
-          HTMLAttributes: {
-            style: "margin-bottom: 4px; font-size: 16px; color: #000000;"
-          }
-        }),
-        BulletList.configure({
-          HTMLAttributes: {
-            style: "font-size: 14px; color: #000000;"
-          }
-        }),
-        OrderedList.configure({
-          HTMLAttributes: {
-            style: "font-size: 14px; color: #000000;"
-          }
-        }),
-        HorizontalRule.configure({
-          HTMLAttributes: {
-            style: "border: none; border-top: 2px solid #e2e8f0; margin: 1rem 0;"
-          }
-        }),
-        TextAlign.configure({
-          types: ["heading", "paragraph", "image"],
-          defaultAlignment: "left"
-        }),
+        StarterKit,
+        Placeholder.configure({ placeholder: "Start typing..." }),
+        Link.configure({ openOnClick: true, autolink: true }),
+        Image,
+        TextAlign.configure({ types: ["heading", "paragraph"] }),
+
+        // Используем наше кастомное расширение для таблиц
+        CustomTable.configure({ resizable: true }),
+        TableRow, // TableRow itself doesn't need a style attribute
+        CustomTableHeader,
+        CustomTableCell,
       ],
       content: this.inputTarget.value,
       onUpdate: ({ editor }) => {
@@ -127,119 +130,148 @@ export default class extends Controller {
   }
 
   disconnect() {
-    if (this.editor) {
-      this.editor.destroy()
-    }
+    this.editor?.destroy()
   }
 
   save(event) {
     event.preventDefault()
-    this.showNotification("Saving...", "info")
     this.inputTarget.value = this.editor.getHTML()
     this.formTarget.requestSubmit()
   }
 
-  showNotification(message, type = "info") {
-    const notification = document.createElement("div")
-    notification.className = `fixed top-4 right-4 px-4 py-2 rounded-md shadow-lg z-50 ${
-      type === "success" ? "bg-green-500 text-white" : 
-      type === "error" ? "bg-red-500 text-white" : 
-      "bg-blue-500 text-white"
-    }`
-    notification.textContent = message
-    
-    document.body.appendChild(notification)
-    
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification)
-      }
-    }, 3000)
-  }
-
-  // Toolbar actions
+  // === Базовое форматирование ===
   toggleBold() { this.editor.chain().focus().toggleBold().run() }
   toggleItalic() { this.editor.chain().focus().toggleItalic().run() }
   toggleStrike() { this.editor.chain().focus().toggleStrike().run() }
   toggleUnderline() { this.editor.chain().focus().toggleUnderline().run() }
-  
-  toggleHeading(event) {
-    const level = parseInt(event.currentTarget.dataset.level)
-    this.editor.chain().focus().toggleHeading({ level }).run()
-  }
-  
+
+  // === Структура текста ===
+  toggleHeading(e) { this.editor.chain().focus().toggleHeading({ level: +e.currentTarget.dataset.level }).run() }
   toggleBulletList() { this.editor.chain().focus().toggleBulletList().run() }
   toggleOrderedList() { this.editor.chain().focus().toggleOrderedList().run() }
   toggleBlockquote() { this.editor.chain().focus().toggleBlockquote().run() }
   toggleCodeBlock() { this.editor.chain().focus().toggleCodeBlock().run() }
   insertHorizontalRule() { this.editor.chain().focus().setHorizontalRule().run() }
+
+  // === Ссылки ===
+  setLink() {
+    const previousUrl = this.editor.getAttributes('link').href
+    const url = window.prompt("URL", previousUrl)
+    if (url === null) return
+    if (url === "") {
+      this.editor.chain().focus().extendMarkRange('link').unsetLink().run()
+      return
+    }
+    this.editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  }
+  unsetLink() { this.editor.chain().focus().unsetLink().run() }
   
+  // === Выравнивание ===
+  setAlign(e) { this.editor.chain().focus().setTextAlign(e.currentTarget.dataset.align).run() }
+
+  // === Таблицы ===
+  insertTableWithBorders() {
+    this.editor.chain().focus().insertTableWithAttributes(
+      { rows: 3, cols: 3, withHeaderRow: true }, // Параметры таблицы
+      {
+        // --- Атрибуты для каждого элемента ---
+  
+        // Стили для тега <table>
+        table: {
+          style: 'width: 100%; border-collapse: collapse; table-layout: fixed; margin: 1rem 0;',
+          class: 'table-bordered',
+        },
+        // Стили для ячеек-заголовков <th>
+        header: {
+          style: 'border: 1px solid red; padding: 0.5rem; font-weight: bold; text-align: left; background-color: #f1f3f5;',
+        },
+        // Стили для обычных ячеек <td>
+        cell: {
+          style: 'border: 1px solid #ccc; padding: 0.5rem; vertical-align: top; position: relative;',
+        }
+      }
+    ).run();
+  }
+
+  insertTwoColumnTable() {
+    this.editor.chain().focus().insertTableWithAttributes(
+      { rows: 1, cols: 2, withHeaderRow: false },
+      { table: { class: 'table-layout' } } // Другой класс или без него
+    ).run()
+  }
+  
+  // Стандартные команды для управления таблицей
+  addColumnBefore() { this.editor.chain().focus().addColumnBefore().run() }
+  addColumnAfter() { this.editor.chain().focus().addColumnAfter().run() }
+  deleteColumn() { this.editor.chain().focus().deleteColumn().run() }
+  addRowBefore() { this.editor.chain().focus().addRowBefore().run() }
+  addRowAfter() { this.editor.chain().focus().addRowAfter().run() }
+  deleteRow() { this.editor.chain().focus().deleteRow().run() }
+  deleteTable() { this.editor.chain().focus().deleteTable().run() }
+  mergeOrSplit() { this.editor.chain().focus().mergeOrSplit().run() }
+  toggleHeaderCell() { this.editor.chain().focus().toggleHeaderCell().run() }
+  toggleHeaderRow() { this.editor.chain().focus().toggleHeaderRow().run() }
+  toggleHeaderColumn() { this.editor.chain().focus().toggleHeaderColumn().run() }
+
+  // === Загрузка изображений ===
   triggerImageUpload() {
     this.fileInputTarget.click()
   }
 
   async handleFileUpload(event) {
+    const file = event.target.files[0]
+    if (!file || !file.type.startsWith("image/")) return
+
     try {
-      const file = event.target.files[0]
-      if (!file) return
+      this.#showNotification("Загрузка изображения...", "info")
+      const data = await this.#uploadFile(file)
 
-      if (!file.type.startsWith("image/")) {
-        throw new Error("Please select an image file")
-      }
-
-      const formData = new FormData()
-      formData.append("file", file)
-
-      const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
-      if (!csrfToken) {
-        throw new Error("CSRF token not found")
-      }
-
-      this.showNotification("Uploading image...", "info")
-
-      const response = await fetch("/upload_image", {
-        method: "POST",
-        headers: {
-          "X-CSRF-Token": csrfToken,
-          "Accept": "application/json"
-        },
-        body: formData,
-        credentials: "same-origin"
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || `Upload failed: ${response.status}`)
-      }
-
-      const data = await response.json()
-      if (!data.url) {
-        throw new Error("Invalid server response")
-      }
+      if (!data.url) throw new Error("Неверный ответ от сервера")
 
       this.editor.chain().focus().setImage({ src: data.url }).run()
-      this.showNotification("Image uploaded successfully", "success")
+      this.#showNotification("Изображение успешно загружено", "success")
     } catch (error) {
-      console.error("Upload error:", error)
-      this.showNotification(`Upload failed: ${error.message}`, "error")
+      console.error("Ошибка загрузки:", error)
+      this.#showNotification(`Ошибка: ${error.message}`, "error")
     } finally {
-      event.target.value = ""
+      event.target.value = "" // Сбрасываем инпут для повторной загрузки того же файла
     }
   }
 
-  setLink() {
-    const url = prompt("Enter URL:")
-    if (url) {
-      this.editor.chain().focus().setLink({ href: url }).run()
+  async #uploadFile(file) {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content
+    if (!csrfToken) throw new Error("CSRF токен не найден")
+
+    const response = await fetch("/upload_image", {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken, "Accept": "application/json" },
+      body: formData,
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.error || `Ошибка сервера: ${response.status}`)
     }
+
+    return response.json()
   }
 
-  unsetLink() {
-    this.editor.chain().focus().unsetLink().run()
+  // === Уведомления ===
+  #showNotification(message, type = "info") {
+    const notification = document.createElement("div")
+    const typeClasses = {
+      success: "bg-green-500 text-white",
+      error: "bg-red-500 text-white",
+      info: "bg-blue-500 text-white",
+    }
+    notification.className = `fixed top-4 right-4 px-4 py-2 rounded-md shadow-lg z-50 ${typeClasses[type] || typeClasses.info}`
+    notification.textContent = message
+    document.body.appendChild(notification)
+    setTimeout(() => {
+      notification.remove()
+    }, 3000)
   }
-
-  setAlignLeft() { this.editor.chain().focus().setTextAlign("left").run() }
-  setAlignCenter() { this.editor.chain().focus().setTextAlign("center").run() }
-  setAlignRight() { this.editor.chain().focus().setTextAlign("right").run() }
-  setAlignJustify() { this.editor.chain().focus().setTextAlign("justify").run() }
 }

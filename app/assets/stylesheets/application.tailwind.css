@@ -23,9 +23,13 @@ img[style*="text-align:left"] {
 }
 
 div[role="textbox"] {
-  @apply h-[277mm]
+  @apply h-[277mm] ps-[20mm] py-[10mm] pe-[10mm]
 }
 
 body {
   @apply bg-gray-300;
+}
+
+.table-bordered {
+  @apply border-collapse border border-gray-300;
 }

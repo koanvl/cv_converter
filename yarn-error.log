@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\user\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @tiptap/core @tiptap/starter-kit \
+  C:\Program Files\nodejs\node.exe C:\Users\user\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @tiptap-pro/extension-export-docx
 
 PATH: 
   C:\Program Files\ImageMagick-7.1.1-Q16-HDRI;C:\Ruby31-x64\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files (x86)\sqlite;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\Memurai\;C:\Program Files\TortoiseGit\bin;C:\Users\user\AppData\Local\Microsoft\WindowsApps;C:\Users\user\AppData\Roaming\npm;C:\Users\user\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\user\AppData\Roaming\npm\node_modules\@angular\cli\bin;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Redis;C:\Users\user\AppData\Local\Programs\cursor\resources\app\bin;c:\Users\user\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand
@@ -14,7 +14,17 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EBUSY: resource busy or locked, lstat 'C:\DumpStack.log.tmp'
+  Error: https://registry.yarnpkg.com/@tiptap-pro%2fextension-export-docx: Not found
+      at params.callback [as _callback] (C:\Users\user\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66145:18)
+      at self.callback (C:\Users\user\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140890:22)
+      at Request.emit (node:events:512:28)
+      at Request.<anonymous> (C:\Users\user\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141862:10)
+      at Request.emit (node:events:512:28)
+      at IncomingMessage.<anonymous> (C:\Users\user\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141784:12)
+      at Object.onceWrapper (node:events:626:28)
+      at IncomingMessage.emit (node:events:524:35)
+      at endReadableNT (node:internal/streams/readable:1359:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
 
 npm manifest: 
   {
@@ -34,8 +44,27 @@ npm manifest:
       "@hotwired/turbo-rails": "^8.0.16",
       "@tailwindcss/cli": "^4.1.11",
       "@tiptap/core": "^3.4.0",
+      "@tiptap/extension-blockquote": "^3.4.0",
+      "@tiptap/extension-bold": "^3.4.0",
+      "@tiptap/extension-bullet-list": "^3.4.0",
+      "@tiptap/extension-code-block": "^3.4.0",
+      "@tiptap/extension-heading": "^3.4.0",
+      "@tiptap/extension-horizontal-rule": "^3.4.0",
+      "@tiptap/extension-image": "^3.4.0",
+      "@tiptap/extension-italic": "^3.4.0",
+      "@tiptap/extension-link": "^3.4.0",
+      "@tiptap/extension-list-item": "^3.4.0",
+      "@tiptap/extension-ordered-list": "^3.4.0",
       "@tiptap/extension-placeholder": "^3.4.0",
+      "@tiptap/extension-strike": "^3.4.0",
+      "@tiptap/extension-table": "^3.4.0",
+      "@tiptap/extension-table-cell": "^3.4.0",
+      "@tiptap/extension-table-header": "^3.4.0",
+      "@tiptap/extension-table-row": "^3.4.0",
+      "@tiptap/extension-text-align": "^3.4.0",
+      "@tiptap/extension-underline": "^3.4.0",
       "@tiptap/pm": "^3.4.0",
+      "@tiptap/prosemirror-tables": "^1.1.4",
       "@tiptap/starter-kit": "^3.4.0",
       "grapesjs": "^0.22.11",
       "grapesjs-blocks-basic": "^1.0.2",
@@ -545,6 +574,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-3.4.0.tgz#5ed26b8a15509af47a1150386c6cece0546cc1b2"
     integrity sha512-E8g9lOYJCX1Dv5XsleD8u+yzaF+Pyn0g8WGrMC8mIUfrWMdWzTL/gFeLQtAMfaLEuddTpJjykSwaDG7XceM2Rg==
   
+  "@tiptap/extension-image@^3.4.0":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@tiptap/extension-image/-/extension-image-3.4.0.tgz#5efd222bebbd3a284e33beb6b4d0e9950ae7cab6"
+    integrity sha512-pDrx8g+3JGUNkXPHYQ7YtgIbyHmxHmwnSG4TM2Z5drc4yrKPFol1w3spg6dq2JnTPds/FZv8Z/hJ9FhaSmA/Tw==
+  
   "@tiptap/extension-italic@^3.4.0":
     version "3.4.0"
     resolved "https://registry.yarnpkg.com/@tiptap/extension-italic/-/extension-italic-3.4.0.tgz#fc6d617d0e8705aedafd4c2acc261477ce1f25d9"
@@ -592,6 +626,31 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@tiptap/extension-strike/-/extension-strike-3.4.0.tgz#d363b048a4766c3d55e0b94cb00e8ea4a1317d08"
     integrity sha512-sJqlO/c/94nRT3nHQEcp6TEHzPWbcxyxOEIufPEAOZn3FCeQby7klo3uLESxtncNoHQ7NmMK5ZYTgCt3Rj4fPQ==
   
+  "@tiptap/extension-table-cell@^3.4.0":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@tiptap/extension-table-cell/-/extension-table-cell-3.4.0.tgz#248842af80734c0f5c810af51433eeacbfca60f2"
+    integrity sha512-0Vdx9wClNvMU/3j8gOwLJ+z4oD5YS5pZstWcg3y3/J9u642C2rPLtGzhj/FjkCA3dlmXUQGGE53YoOxeB+T5bg==
+  
+  "@tiptap/extension-table-header@^3.4.0":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@tiptap/extension-table-header/-/extension-table-header-3.4.0.tgz#2b2b66347659025eb941da6a0c123c30b10a52d7"
+    integrity sha512-g5As/y/7SoljHKOHCtk6H+KFwcHx5S273ijtIuozui5kHkekgKLSeQQlGWNy848ySfko9TjiNP4jbtYkEwFsXA==
+  
+  "@tiptap/extension-table-row@^3.4.0":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@tiptap/extension-table-row/-/extension-table-row-3.4.0.tgz#89ebd8652d6a80395e2e5392984de815406a40fd"
+    integrity sha512-UQljJGTxtN0GAQlYhPvb2keU0PXJddyB0botWeU3nzuX20vqwAjiop8jUgGmMhy+OxkQZXRhxUYCe9GCePQs1w==
+  
+  "@tiptap/extension-table@^3.4.0":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@tiptap/extension-table/-/extension-table-3.4.0.tgz#678e4f87947e4f84856d6455e1d03936dff4a8da"
+    integrity sha512-6OL5Y0cKyhm0niKlhMbu8i7gV8FtNCVPVY11+if6KUKQFQXEzz+afpCBwjILtQdnAtJz1XbV5mN0/6Wb2It/IQ==
+  
+  "@tiptap/extension-text-align@^3.4.0":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@tiptap/extension-text-align/-/extension-text-align-3.4.0.tgz#66f28e4a395c04f7570ee18ed92d70d9065357fe"
+    integrity sha512-73/ZRb0Os3Jh3C8nWS48ARRLNmK8SrZ4nzslKqG5Oq2LrVOgWGqtcCQLldxVaiPCFzXM6mD+bCXysFy4u/92EA==
+  
   "@tiptap/extension-text@^3.4.0":
     version "3.4.0"
     resolved "https://registry.yarnpkg.com/@tiptap/extension-text/-/extension-text-3.4.0.tgz#ee14bc92e69775a7db486afd800657f772f81308"
@@ -630,6 +689,11 @@ Lockfile:
       prosemirror-trailing-node "^3.0.0"
       prosemirror-transform "^1.10.2"
       prosemirror-view "^1.38.1"
+  
+  "@tiptap/prosemirror-tables@^1.1.4":
+    version "1.1.4"
+    resolved "https://registry.yarnpkg.com/@tiptap/prosemirror-tables/-/prosemirror-tables-1.1.4.tgz#e123978f13c9b5f980066ba660ec5df857755916"
+    integrity sha512-O2XnDhZV7xTHSFxMMl8Ei3UVeCxuMlbGYZ+J2QG8CzkK8mxDpBa66kFr5DdyAhvdi1ptpcH9u7/GMwItQpN4sA==
   
   "@tiptap/starter-kit@^3.4.0":
     version "3.4.0"

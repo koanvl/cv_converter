@@ -153,6 +153,52 @@
             <polyline points="21 15 16 10 5 21"></polyline>
           </svg>
         </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <%# Table controls %>
+        <button type="button" data-action="editor#insertTableWithBorders" 
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Insert Table">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+        </button>
+        <button type="button" data-action="editor#insertTwoColumnTable" 
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Insert Table">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+        </button>
+        
+        <div class="relative group" data-controller="dropdown">
+          <button type="button" data-action="dropdown#toggle" class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Table Actions">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div data-dropdown-target="menu" class="absolute left-0 mt-1 w-48 bg-white border rounded-md shadow-lg hidden group-hover:block z-50">
+            <div class="py-1">
+              <button type="button" data-action="editor#addColumnBefore" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Add Column Before</button>
+              <button type="button" data-action="editor#addColumnAfter" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Add Column After</button>
+              <button type="button" data-action="editor#deleteColumn" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Delete Column</button>
+              <hr class="my-1">
+              <button type="button" data-action="editor#addRowBefore" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Add Row Before</button>
+              <button type="button" data-action="editor#addRowAfter" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Add Row After</button>
+              <button type="button" data-action="editor#deleteRow" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Delete Row</button>
+              <hr class="my-1">
+              <button type="button" data-action="editor#mergeCells" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Merge Cells</button>
+              <button type="button" data-action="editor#splitCell" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Split Cell</button>
+              <hr class="my-1">
+              <button type="button" data-action="editor#toggleHeaderCell" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Toggle Header Cell</button>
+              <button type="button" data-action="editor#toggleHeaderRow" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Toggle Header Row</button>
+              <button type="button" data-action="editor#toggleHeaderColumn" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Toggle Header Column</button>
+              <hr class="my-1">
+              <button type="button" data-action="editor#toggleTableBorders" class="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Toggle Borders</button>
+              <hr class="my-1">
+              <button type="button" data-action="editor#deleteTable" class="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50">Delete Table</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <%# Editor Content %>
@@ -173,9 +219,118 @@
   <% end %>
 </div>
 
-<%# Добавляем стили для активных кнопок %>
+<%# Editor styles %>
 <style>
-.is-active {
-  background-color: #e5e7eb;
+.ProseMirror {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 200px;
+}
+.ProseMirror:focus {
+  outline: 2px solid #3b82f6;
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Стилизация элементов контента */
+.ProseMirror h1 { font-size: 2em; font-weight: bold; }
+.ProseMirror h2 { font-size: 1.5em; font-weight: bold; }
+.ProseMirror h3 { font-size: 1.25em; font-weight: bold; }
+
+.ProseMirror strong { font-weight: bold; }
+.ProseMirror em { font-style: italic; }
+.ProseMirror s { text-decoration: line-through; }
+.ProseMirror u { text-decoration: underline; }
+
+.ProseMirror a {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #e2e8f0;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.ProseMirror pre {
+  background-color: #f7fafc;
+  color: #333;
+  font-family: monospace;
+  padding: 1rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.ProseMirror li { margin-bottom: 4px; }
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 2rem 0;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid #68cef8;
+}
+
+/* Стили для таблиц */
+.ProseMirror table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Класс для таблицы с рамками */
+.ProseMirror table.table-bordered td,
+.ProseMirror table.table-bordered th {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  vertical-align: top;
+  position: relative;
+}
+
+/* Стили по умолчанию для всех ячеек, если нет класса */
+.ProseMirror table td,
+.ProseMirror table th {
+  padding: 0.5rem;
+  vertical-align: top;
+  position: relative;
+}
+
+.ProseMirror th {
+  font-weight: bold;
+  text-align: left;
+  background-color: #f1f3f5;
+}
+
+/* Для изменения размера колонок */
+.column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background-color: #3b82f6;
 }
 </style>
