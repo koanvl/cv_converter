@@ -1,0 +1,134 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Навигационная панель -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <%= link_to templates_path, 
+              class: "inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900" do %>
+            ← Назад к списку
+          <% end %>
+          
+          <div class="border-l border-gray-300 pl-4">
+            <h1 class="text-xl font-semibold text-gray-900">
+              📄 <%= @template.title %>
+            </h1>
+            <p class="text-sm text-gray-500">
+              Создан: <%= @template.created_at.strftime("%d.%m.%Y в %H:%M") %>
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex space-x-3">
+          <%= link_to edit_template_path(@template),
+              class: "inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+            ✏️ Редактировать
+          <% end %>
+          
+          <%= link_to template_path(@template),
+              method: :delete,
+              confirm: "Вы уверены, что хотите удалить шаблон '#{@template.title}'?",
+              class: "inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 border border-transparent rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" do %>
+            🗑️ Удалить
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Контент шаблона -->
+  <div class="py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="border-b border-gray-200 bg-gray-50 px-6 py-3">
+          <h3 class="text-sm font-medium text-gray-900">
+            Предварительный просмотр шаблона
+          </h3>
+        </div>
+        
+        <div class="p-6">
+          <% 
+            # Определяем какой контент показывать
+            html_content = ""
+            css_content = ""
+            
+            # Способ 1: Проверяем отдельные поля html/css
+            if @template.html.present?
+              html_content = @template.html
+              css_content = @template.css || ""
+            # Способ 2: Парсим JSON данные
+            elsif @template.data.present?
+              begin
+                template_data = JSON.parse(@template.data)
+                
+                # Альтернативный формат
+                if template_data['gjs_html']
+                  html_content = template_data['gjs_html']
+                  css_content = template_data['gjs_css'] || ""
+                # Стандартный GrapesJS формат
+                elsif template_data['pages'] && template_data['pages'].any?
+                  template_data['pages'].each do |page|
+                    if page['frames'] && page['frames'].any?
+                      frame = page['frames'][0]
+                      if frame['component']
+                        html_content = frame['component']
+                      end
+                    end
+                  end
+                  if template_data['assets']
+                    css_content = template_data['assets']
+                  end
+                # Простой формат
+                elsif template_data['html']
+                  html_content = template_data['html']
+                  css_content = template_data['css'] || ""
+                end
+              rescue JSON::ParserError
+                # Игнорируем ошибки парсинга
+              end
+            end
+          %>
+          
+          <% if html_content.present? %>
+            <!-- Отображаем CSS -->
+            <% if css_content.present? %>
+              <style>
+                <%= raw css_content %>
+              </style>
+            <% end %>
+            
+            <!-- Отображаем HTML контент -->
+            <div id="template-content" class="min-h-[400px]">
+              <%= raw html_content %>
+            </div>
+          <% else %>
+            <!-- Пустой шаблон -->
+            <div class="text-center py-12">
+              <div class="text-gray-400 text-4xl mb-4">📝</div>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">Шаблон пуст</h3>
+              <p class="text-gray-500 mb-4">
+                Этот шаблон еще не содержит контента
+              </p>
+              <%= link_to edit_template_path(@template),
+                  class: "inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700" do %>
+                ✏️ Начать редактирование
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Отладочная информация (можно убрать в продакшене) -->
+      <% if Rails.env.development? %>
+        <div class="mt-4 bg-gray-100 rounded-lg p-4">
+          <h4 class="text-sm font-medium text-gray-900 mb-2">Отладочная информация:</h4>
+          <div class="text-xs text-gray-600">
+            <p><strong>HTML поле:</strong> <%= @template.html.present? ? "Заполнено (#{@template.html.length} символов)" : "Пусто" %></p>
+            <p><strong>CSS поле:</strong> <%= @template.css.present? ? "Заполнено (#{@template.css.length} символов)" : "Пусто" %></p>
+            <p><strong>JSON поле:</strong> <%= @template.data.present? ? "Заполнено (#{@template.data.length} символов)" : "Пусто" %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div> 

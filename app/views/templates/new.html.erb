@@ -1,0 +1,56 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-6 py-8">
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-gray-900">📄 Создать новый шаблон</h1>
+          <p class="mt-2 text-sm text-gray-600">
+            Укажите название для вашего нового шаблона. После создания вы сможете редактировать его с помощью GrapesJS.
+          </p>
+        </div>
+
+        <%= form_with(model: @template, local: true, class: "space-y-6") do |form| %>
+          <% if @template.errors.any? %>
+            <div class="bg-red-50 border border-red-200 rounded-md p-4">
+              <div class="flex">
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800">
+                    Ошибки при создании шаблона:
+                  </h3>
+                  <div class="mt-2 text-sm text-red-700">
+                    <ul class="list-disc list-inside">
+                      <% @template.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div>
+            <%= form.label :title, "Название шаблона", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.text_field :title, 
+                placeholder: "Например: Резюме дизайнера",
+                class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm",
+                required: true %>
+            <p class="mt-1 text-xs text-gray-500">
+              Введите описательное название для вашего шаблона
+            </p>
+          </div>
+
+          <div class="flex justify-between items-center pt-4">
+            <%= link_to templates_path, 
+                class: "inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" do %>
+              ← Назад к списку
+            <% end %>
+            
+            <%= form.submit "Создать шаблон", 
+                class: "inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div data-controller="editor">
+  <%= form_with(model: example, class: "space-y-6", data: { "editor-target": "form" }) do |form| %>
+    <% if example.errors.any? %>
+      <div class="bg-red-50 p-4 rounded-md">
+        <h2 class="text-red-800 text-sm font-medium"><%= pluralize(example.errors.count, "error") %> prohibited this example from being saved:</h2>
+        <ul class="mt-3 list-disc list-inside text-red-600">
+          <% example.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :title, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :format, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.select :format, 
+          options_for_select([["Default", "default"], ["Modern", "modern"], ["Classic", "classic"]], example.format),
+          {}, 
+          class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :published, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.check_box :published, class: "rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="mt-6">
+      <div class="flex flex-wrap gap-2 mb-2">
+        <button type="button" data-action="editor#toggleBold" class="px-3 py-1 border rounded hover:bg-gray-100">B</button>
+        <button type="button" data-action="editor#toggleItalic" class="px-3 py-1 border rounded hover:bg-gray-100">I</button>
+        <button type="button" data-action="editor#toggleStrike" class="px-3 py-1 border rounded hover:bg-gray-100">S</button>
+        <button type="button" data-action="editor#toggleUnderline" class="px-3 py-1 border rounded hover:bg-gray-100">U</button>
+        <button type="button" data-action="editor#toggleHeading" data-level="1" class="px-3 py-1 border rounded hover:bg-gray-100">H1</button>
+        <button type="button" data-action="editor#toggleHeading" data-level="2" class="px-3 py-1 border rounded hover:bg-gray-100">H2</button>
+        <button type="button" data-action="editor#toggleHeading" data-level="3" class="px-3 py-1 border rounded hover:bg-gray-100">H3</button>
+        <button type="button" data-action="editor#toggleBulletList" class="px-3 py-1 border rounded hover:bg-gray-100">• List</button>
+        <button type="button" data-action="editor#toggleOrderedList" class="px-3 py-1 border rounded hover:bg-gray-100">1. List</button>
+        <button type="button" data-action="editor#toggleBlockquote" class="px-3 py-1 border rounded hover:bg-gray-100">❝</button>
+        <button type="button" data-action="editor#toggleCodeBlock" class="px-3 py-1 border rounded hover:bg-gray-100">{ }</button>
+        <button type="button" data-action="editor#insertHorizontalRule" class="px-3 py-1 border rounded hover:bg-gray-100">HR</button>
+        <button type="button" data-action="editor#triggerImageUpload" class="px-3 py-1 border rounded hover:bg-gray-100">🖼️</button>
+        <button type="button" data-action="editor#setLink" class="px-3 py-1 border rounded hover:bg-gray-100">🔗</button>
+        <button type="button" data-action="editor#unsetLink" class="px-3 py-1 border rounded hover:bg-gray-100">✖️</button>
+        <button type="button" data-action="editor#setAlignLeft" class="px-3 py-1 border rounded hover:bg-gray-100">Left</button>
+        <button type="button" data-action="editor#setAlignCenter" class="px-3 py-1 border rounded hover:bg-gray-100">Center</button>
+        <button type="button" data-action="editor#setAlignRight" class="px-3 py-1 border rounded hover:bg-gray-100">Right</button>
+        <button type="button" data-action="editor#setAlignJustify" class="px-3 py-1 border rounded hover:bg-gray-100">Justify</button>
+      </div>
+
+      <div data-editor-target="element" class="border rounded h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
+      <%= form.text_area :content, data: { "editor-target": "input" }, class: "hidden" %>
+      <input type="file" accept="image/*" data-editor-target="fileInput" style="display:none" data-action="change->editor#handleFileUpload">
+    </div>
+
+    <div>
+      <%= form.label :css, "Custom CSS", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :css, rows: 5, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-mono text-sm" %>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <%= link_to "Cancel", examples_path, class: "px-4 py-2 border rounded-md hover:bg-gray-50" %>
+      <button type="button" data-action="editor#save" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
+    </div>
+  <% end %>
+</div>

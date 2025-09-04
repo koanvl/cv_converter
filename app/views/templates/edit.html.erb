@@ -1,0 +1,41 @@
+<div class="min-h-screen bg-gray-100">
+  <!-- Заголовок -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <div class="flex items-center space-x-4">
+          <%= link_to templates_path, 
+              class: "text-gray-600 hover:text-gray-900 text-sm font-medium" do %>
+            ← Назад к списку
+          <% end %>
+          <div class="border-l border-gray-300 pl-4">
+            <h1 class="text-xl font-semibold text-gray-900">
+              ✏️ Редактирование: <%= @template.title %>
+            </h1>
+          </div>
+        </div>
+        
+        <button
+          data-action="click->template-editor#save"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          type="button"
+        >
+          💾 Сохранить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GrapesJS редактор -->
+  <div 
+    data-controller="template-editor"
+    data-template-editor-content-value="<%= html_escape(@template.data.present? ? @template.data.to_json : '{}') %>"
+    data-template-editor-update-url-value="<%= template_path(@template) %>"
+    class="relative">
+    
+    <div 
+      data-template-editor-target="editor" 
+      style="height: calc(100vh - 80px); width: 100%;">
+    </div>
+  </div>
+</div>

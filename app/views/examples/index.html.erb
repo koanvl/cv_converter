@@ -1,0 +1,24 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">Examples</h1>
+    <%= link_to "New Example", new_example_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @examples.each do |example| %>
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-xl font-semibold mb-2"><%= example.title %></h2>
+          <div class="text-gray-600 mb-4">
+            Format: <%= example.format.capitalize %>
+          </div>
+          <div class="flex justify-between items-center">
+            <%= link_to "Edit", edit_example_path(example), class: "text-blue-500 hover:text-blue-700" %>
+            <%= link_to "View", example_path(example), class: "text-green-500 hover:text-green-700" %>
+            <%= button_to "Delete", example_path(example), method: :delete, class: "text-red-500 hover:text-red-700", form: { data: { turbo_confirm: "Are you sure?" } } %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
