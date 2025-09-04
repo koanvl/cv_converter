@@ -124,7 +124,35 @@ export default class extends Controller {
       ],
       content: this.inputTarget.value,
       onUpdate: ({ editor }) => {
+        // Проверяем все таблицы
+        const tables = editor.view.dom.getElementsByTagName('table');
+        Array.from(tables).forEach(table => {
+          const cells = table.getElementsByTagName('td');
+          const needsClass = Array.from(cells).some(td => !td.hasAttribute('style'));
+          
+          if (needsClass) {
+            if (!table.classList.contains('custom-grid-table')) {
+              table.classList.add('custom-grid-table');
+            }
+          } else {
+            table.classList.remove('custom-grid-table');
+          }
+        });
+        
+        // Сохраняем HTML
         this.inputTarget.value = editor.getHTML()
+      },
+      onCreate: ({ editor }) => {
+        // При инициализации проверяем все таблицы
+        const tables = editor.view.dom.getElementsByTagName('table');
+        Array.from(tables).forEach(table => {
+          const cells = table.getElementsByTagName('td');
+          const needsClass = Array.from(cells).some(td => !td.hasAttribute('style'));
+          
+          if (needsClass && !table.classList.contains('custom-grid-table')) {
+            table.classList.add('custom-grid-table');
+          }
+        });
       },
     })
   }
@@ -178,8 +206,7 @@ export default class extends Controller {
   
         // Стили для тега <table>
         table: {
-          style: 'width: 100%; border-collapse: collapse; table-layout: fixed; margin: 1rem 0;',
-          class: 'table-bordered',
+          style: 'width: 100%; border-collapse: collapse; table-layout: fixed; margin: 1rem 0;',          
         },
         // Стили для ячеек-заголовков <th>
         header: {
@@ -196,9 +223,34 @@ export default class extends Controller {
   insertTwoColumnTable() {
     this.editor.chain().focus().insertTableWithAttributes(
       { rows: 1, cols: 2, withHeaderRow: false },
-      { table: { class: 'table-layout' } } // Другой класс или без него
-    ).run()
+      {
+        table: {
+          style: 'width: 100%; border-collapse: collapse; table-layout: fixed; margin: 1rem 0;',
+          class: 'custom-table',
+        }
+      }
+    ).run();
+  
+    // Получаем позицию курсора
+    const { $from } = this.editor.state.selection;
+  
+    // Находим ближайшую родительскую таблицу из позиции курсора
+    const tableNode = $from.node(-1); // -1 уровень выше, обычно это таблица
+    const domTable = this.editor.view.nodeDOM($from.before(-1)); // получаем DOM таблицы
+  
+    if (domTable) {
+      const tbody = domTable.querySelector('tbody');
+      if (tbody) {
+        const cells = tbody.getElementsByTagName('td');
+        const needsClass = Array.from(cells).some(td => !td.hasAttribute('style'));
+  
+        if (needsClass && !tbody.classList.contains('table-custom-grid')) {
+          tbody.classList.add('table-custom-grid');
+        }
+      }
+    }
   }
+  
   
   // Стандартные команды для управления таблицей
   addColumnBefore() { this.editor.chain().focus().addColumnBefore().run() }

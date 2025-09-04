@@ -165,9 +165,10 @@
         </button>
         <button type="button" data-action="editor#insertTwoColumnTable" 
                 class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Insert Table">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
+</svg>
+
         </button>
         
         <div class="relative group" data-controller="dropdown">
@@ -301,9 +302,11 @@
 }
 
 /* Класс для таблицы с рамками */
-.ProseMirror table.table-bordered td,
-.ProseMirror table.table-bordered th {
-  border: 1px solid #ccc;
+.edit-template .ProseMirror table.custom-grid-table td,
+.edit-template .ProseMirror table.custom-grid-table th,
+.new-template .ProseMirror table.custom-grid-table td,
+.new-template .ProseMirror table.custom-grid-table th {
+  border: 1px dashed #ccc;
   padding: 0.5rem;
   vertical-align: top;
   position: relative;
