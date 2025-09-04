@@ -21,11 +21,6 @@ export default class extends Controller {
   static targets = ["element", "input", "fileInput", "form"]
 
   connect() {
-    console.log("Editor controller connected")
-    console.log("Form target:", this.formTarget)
-    console.log("Input target:", this.inputTarget)
-    console.log("Element target:", this.elementTarget)
-
     this.editor = new Editor({
       element: this.elementTarget,
       extensions: [
@@ -51,8 +46,12 @@ export default class extends Controller {
       content: this.inputTarget.value,
       onUpdate: ({ editor }) => {
         this.inputTarget.value = editor.getHTML()
+        this.updateMenuState()
       },
     })
+
+    // Initial menu state
+    this.updateMenuState()
   }
 
   disconnect() {
@@ -61,19 +60,37 @@ export default class extends Controller {
     }
   }
 
+  updateMenuState() {
+    // Update button states based on current formatting
+    this.element.querySelectorAll('[data-action^="editor#toggle"]').forEach(button => {
+      const action = button.dataset.action.replace('editor#toggle', '').toLowerCase()
+      if (this.editor.isActive(action)) {
+        button.classList.add('is-active')
+      } else {
+        button.classList.remove('is-active')
+      }
+    })
+
+    // Update alignment buttons
+    const alignments = ['left', 'center', 'right', 'justify']
+    alignments.forEach(alignment => {
+      const button = this.element.querySelector(`[data-action="editor#setAlign${alignment.charAt(0).toUpperCase() + alignment.slice(1)}"]`)
+      if (button) {
+        if (this.editor.isActive({ textAlign: alignment })) {
+          button.classList.add('is-active')
+        } else {
+          button.classList.remove('is-active')
+        }
+      }
+    })
+  }
+
   save(event) {
     event.preventDefault()
-    console.log("Save button clicked")
     
     try {
       this.showNotification("Saving...", "info")
-      
-      // Update hidden input with current content
       this.inputTarget.value = this.editor.getHTML()
-      console.log("Updated content:", this.inputTarget.value)
-      
-      // Submit the form
-      console.log("Form target before submit:", this.formTarget)
       this.formTarget.requestSubmit()
     } catch (error) {
       console.error("Save error:", error)
@@ -99,23 +116,45 @@ export default class extends Controller {
     }, 3000)
   }
 
-  // Toolbar actions
+  // Text formatting
   toggleBold() { this.editor.chain().focus().toggleBold().run() }
   toggleItalic() { this.editor.chain().focus().toggleItalic().run() }
   toggleStrike() { this.editor.chain().focus().toggleStrike().run() }
   toggleUnderline() { this.editor.chain().focus().toggleUnderline().run() }
   
+  // Headings
   toggleHeading(event) {
     const level = parseInt(event.currentTarget.dataset.level)
     this.editor.chain().focus().toggleHeading({ level }).run()
   }
+
+  toggleParagraph() {
+    this.editor.chain().focus().setParagraph().run()
+  }
   
+  // Lists
   toggleBulletList() { this.editor.chain().focus().toggleBulletList().run() }
   toggleOrderedList() { this.editor.chain().focus().toggleOrderedList().run() }
-  toggleBlockquote() { this.editor.chain().focus().toggleBlockquote().run() }
-  toggleCodeBlock() { this.editor.chain().focus().toggleCodeBlock().run() }
-  insertHorizontalRule() { this.editor.chain().focus().setHorizontalRule().run() }
   
+  // Alignment
+  setAlignLeft() { this.editor.chain().focus().setTextAlign('left').run() }
+  setAlignCenter() { this.editor.chain().focus().setTextAlign('center').run() }
+  setAlignRight() { this.editor.chain().focus().setTextAlign('right').run() }
+  setAlignJustify() { this.editor.chain().focus().setTextAlign('justify').run() }
+  
+  // Links
+  setLink() {
+    const url = prompt("Enter URL:")
+    if (url) {
+      this.editor.chain().focus().setLink({ href: url }).run()
+    }
+  }
+
+  unsetLink() {
+    this.editor.chain().focus().unsetLink().run()
+  }
+
+  // Images
   triggerImageUpload() {
     this.fileInputTarget.click()
   }
@@ -166,20 +205,4 @@ export default class extends Controller {
       event.target.value = ""
     }
   }
-
-  setLink() {
-    const url = prompt("Enter URL:")
-    if (url) {
-      this.editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
-    }
-  }
-
-  unsetLink() {
-    this.editor.chain().focus().unsetLink().run()
-  }
-
-  setAlignLeft() { this.editor.chain().focus().setTextAlign("left").run() }
-  setAlignCenter() { this.editor.chain().focus().setTextAlign("center").run() }
-  setAlignRight() { this.editor.chain().focus().setTextAlign("right").run() }
-  setAlignJustify() { this.editor.chain().focus().setTextAlign("justify").run() }
 }

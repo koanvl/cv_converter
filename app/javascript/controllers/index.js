@@ -12,3 +12,6 @@ application.register("hello", HelloController)
 
 import TemplateEditorController from "./template_editor_controller"
 application.register("template-editor", TemplateEditorController)
+
+import DropdownController from "./dropdown_controller"
+application.register("dropdown", DropdownController)

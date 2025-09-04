@@ -30,29 +30,133 @@
     </div>
 
     <div class="mt-6">
-      <div class="flex flex-wrap gap-2 mb-2">
-        <button type="button" data-action="editor#toggleBold" class="px-3 py-1 border rounded hover:bg-gray-100">B</button>
-        <button type="button" data-action="editor#toggleItalic" class="px-3 py-1 border rounded hover:bg-gray-100">I</button>
-        <button type="button" data-action="editor#toggleStrike" class="px-3 py-1 border rounded hover:bg-gray-100">S</button>
-        <button type="button" data-action="editor#toggleUnderline" class="px-3 py-1 border rounded hover:bg-gray-100">U</button>
-        <button type="button" data-action="editor#toggleHeading" data-level="1" class="px-3 py-1 border rounded hover:bg-gray-100">H1</button>
-        <button type="button" data-action="editor#toggleHeading" data-level="2" class="px-3 py-1 border rounded hover:bg-gray-100">H2</button>
-        <button type="button" data-action="editor#toggleHeading" data-level="3" class="px-3 py-1 border rounded hover:bg-gray-100">H3</button>
-        <button type="button" data-action="editor#toggleBulletList" class="px-3 py-1 border rounded hover:bg-gray-100">• List</button>
-        <button type="button" data-action="editor#toggleOrderedList" class="px-3 py-1 border rounded hover:bg-gray-100">1. List</button>
-        <button type="button" data-action="editor#toggleBlockquote" class="px-3 py-1 border rounded hover:bg-gray-100">❝</button>
-        <button type="button" data-action="editor#toggleCodeBlock" class="px-3 py-1 border rounded hover:bg-gray-100">{ }</button>
-        <button type="button" data-action="editor#insertHorizontalRule" class="px-3 py-1 border rounded hover:bg-gray-100">HR</button>
-        <button type="button" data-action="editor#triggerImageUpload" class="px-3 py-1 border rounded hover:bg-gray-100">🖼️</button>
-        <button type="button" data-action="editor#setLink" class="px-3 py-1 border rounded hover:bg-gray-100">🔗</button>
-        <button type="button" data-action="editor#unsetLink" class="px-3 py-1 border rounded hover:bg-gray-100">✖️</button>
-        <button type="button" data-action="editor#setAlignLeft" class="px-3 py-1 border rounded hover:bg-gray-100">Left</button>
-        <button type="button" data-action="editor#setAlignCenter" class="px-3 py-1 border rounded hover:bg-gray-100">Center</button>
-        <button type="button" data-action="editor#setAlignRight" class="px-3 py-1 border rounded hover:bg-gray-100">Right</button>
-        <button type="button" data-action="editor#setAlignJustify" class="px-3 py-1 border rounded hover:bg-gray-100">Justify</button>
+      <%# Editor Toolbar %>
+      <div class="flex flex-wrap items-center gap-1 p-2 bg-white border rounded-t mb-1">
+        <div class="relative" data-controller="dropdown">
+          <button type="button" 
+                  data-action="dropdown#toggle"
+                  class="flex items-center px-3 py-1.5 text-gray-700 rounded hover:bg-gray-100 transition-colors">
+            <span class="text-sm font-medium">Text</span>
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div data-dropdown-target="menu" 
+               class="absolute left-0 mt-1 w-40 bg-white border rounded-md shadow-lg hidden z-50">
+            <button type="button" data-action="editor#toggleHeading" data-level="1" 
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 1</button>
+            <button type="button" data-action="editor#toggleHeading" data-level="2"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 2</button>
+            <button type="button" data-action="editor#toggleHeading" data-level="3"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 3</button>
+            <button type="button" data-action="editor#toggleParagraph"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Paragraph</button>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="editor#toggleBold" 
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Bold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
+            <path d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
+          </svg>
+        </button>
+
+        <button type="button" data-action="editor#toggleItalic"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Italic">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="19" y1="4" x2="10" y2="4"></line>
+            <line x1="14" y1="20" x2="5" y2="20"></line>
+            <line x1="15" y1="4" x2="9" y2="20"></line>
+          </svg>
+        </button>
+
+        <button type="button" data-action="editor#toggleStrike"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Strike">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M17.5,12h-11"></path>
+            <path d="M16.5,8a4,4,0,0,0-4-4h-2a4,4,0,0,0-4,4"></path>
+            <path d="M16.5,16a4,4,0,0,1-4,4h-2a4,4,0,0,1-4-4"></path>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="editor#toggleBulletList"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Bullet List">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="9" y1="6" x2="20" y2="6"></line>
+            <line x1="9" y1="12" x2="20" y2="12"></line>
+            <line x1="9" y1="18" x2="20" y2="18"></line>
+            <circle cx="5" cy="6" r="2"></circle>
+            <circle cx="5" cy="12" r="2"></circle>
+            <circle cx="5" cy="18" r="2"></circle>
+          </svg>
+        </button>
+
+        <button type="button" data-action="editor#toggleOrderedList"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Numbered List">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="10" y1="6" x2="21" y2="6"></line>
+            <line x1="10" y1="12" x2="21" y2="12"></line>
+            <line x1="10" y1="18" x2="21" y2="18"></line>
+            <path d="M4,6h1v4H4V6z M4,10h1 M4,18h1"></path>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="editor#setAlignLeft"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Align Left">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="15" y2="12"></line>
+            <line x1="3" y1="18" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <button type="button" data-action="editor#setAlignCenter"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Align Center">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="6" y1="12" x2="18" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+
+        <button type="button" data-action="editor#setAlignRight"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Align Right">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="9" y1="12" x2="21" y2="12"></line>
+            <line x1="6" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="editor#setLink"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Add Link">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+        </button>
+
+        <button type="button" data-action="editor#triggerImageUpload"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Add Image">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </button>
       </div>
 
-      <div data-editor-target="element" class="border rounded h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
+      <%# Editor Content %>
+      <div data-editor-target="element" class="prose max-w-none border rounded-b min-h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
       <%= form.text_area :content, data: { "editor-target": "input" }, class: "hidden" %>
       <input type="file" accept="image/*" data-editor-target="fileInput" style="display:none" data-action="change->editor#handleFileUpload">
     </div>
@@ -68,3 +172,10 @@
     </div>
   <% end %>
 </div>
+
+<%# Добавляем стили для активных кнопок %>
+<style>
+.is-active {
+  background-color: #e5e7eb;
+}
+</style>
