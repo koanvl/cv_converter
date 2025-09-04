@@ -24,34 +24,106 @@ export default class extends Controller {
     this.editor = new Editor({
       element: this.elementTarget,
       extensions: [
-        StarterKit.configure({ history: true }),
+        StarterKit.configure({ 
+          heading: {
+            levels: [1, 2, 3]
+          }
+        }),
+        Heading.extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
+              style: {
+                default: null,
+                renderHTML: (attributes) => {
+                  const level = attributes.level
+                  switch(level) {
+                    case 1:
+                      return { style: "font-size: 24px; font-weight: bold; color: #000000;" }
+                    case 2:
+                      return { style: "font-size: 20px; font-weight: bold; color: #000000;" }
+                    case 3:
+                      return { style: "font-size: 16px; font-weight: bold; color: #000000;" }
+                    default:
+                      return {}
+                  }
+                }
+              }
+            }
+          }
+        }).configure({ levels: [1, 2, 3] }),
         Placeholder.configure({ placeholder: "Start writing..." }),
-        Heading.configure({ levels: [1, 2, 3] }),
-        Bold,
-        Italic,
-        Strike,
-        Underline,
-        Link.configure({ openOnClick: true }),
-        Image,
-        Blockquote,
-        CodeBlock,
-        ListItem,
-        BulletList,
-        OrderedList,
-        HorizontalRule,
+        Bold.configure({
+          HTMLAttributes: {
+            style: "font-weight: bold;"
+          }
+        }),
+        Italic.configure({
+          HTMLAttributes: {
+            style: "font-style: italic;"
+          }
+        }),
+        Strike.configure({
+          HTMLAttributes: {
+            style: "text-decoration: line-through;"
+          }
+        }),
+        Underline.configure({
+          HTMLAttributes: {
+            style: "text-decoration: underline;"
+          }
+        }),
+        Link.configure({ 
+          openOnClick: true,
+          HTMLAttributes: {
+            style: "color: #0066cc; text-decoration: underline;"
+          }
+        }),
+        Image.configure({
+          HTMLAttributes: {
+            style: "max-width: 100%; height: auto; margin: 1rem 0;"
+          }
+        }),
+        Blockquote.configure({
+          HTMLAttributes: {
+            style: "border-left: 4px solid #e2e8f0; padding-left: 1rem; margin: 1rem 0; font-style: italic;"
+          }
+        }),
+        CodeBlock.configure({
+          HTMLAttributes: {
+            style: "background-color: #f7fafc; padding: 1rem; border-radius: 4px; font-family: monospace;"
+          }
+        }),
+        ListItem.configure({
+          HTMLAttributes: {
+            style: "margin-bottom: 4px; font-size: 16px; color: #000000;"
+          }
+        }),
+        BulletList.configure({
+          HTMLAttributes: {
+            style: "font-size: 14px; color: #000000;"
+          }
+        }),
+        OrderedList.configure({
+          HTMLAttributes: {
+            style: "font-size: 14px; color: #000000;"
+          }
+        }),
+        HorizontalRule.configure({
+          HTMLAttributes: {
+            style: "border: none; border-top: 2px solid #e2e8f0; margin: 1rem 0;"
+          }
+        }),
         TextAlign.configure({
-          types: ['heading', 'paragraph', 'image']
+          types: ["heading", "paragraph", "image"],
+          defaultAlignment: "left"
         }),
       ],
       content: this.inputTarget.value,
       onUpdate: ({ editor }) => {
         this.inputTarget.value = editor.getHTML()
-        this.updateMenuState()
       },
     })
-
-    // Initial menu state
-    this.updateMenuState()
   }
 
   disconnect() {
@@ -60,42 +132,11 @@ export default class extends Controller {
     }
   }
 
-  updateMenuState() {
-    // Update button states based on current formatting
-    this.element.querySelectorAll('[data-action^="editor#toggle"]').forEach(button => {
-      const action = button.dataset.action.replace('editor#toggle', '').toLowerCase()
-      if (this.editor.isActive(action)) {
-        button.classList.add('is-active')
-      } else {
-        button.classList.remove('is-active')
-      }
-    })
-
-    // Update alignment buttons
-    const alignments = ['left', 'center', 'right', 'justify']
-    alignments.forEach(alignment => {
-      const button = this.element.querySelector(`[data-action="editor#setAlign${alignment.charAt(0).toUpperCase() + alignment.slice(1)}"]`)
-      if (button) {
-        if (this.editor.isActive({ textAlign: alignment })) {
-          button.classList.add('is-active')
-        } else {
-          button.classList.remove('is-active')
-        }
-      }
-    })
-  }
-
   save(event) {
     event.preventDefault()
-    
-    try {
-      this.showNotification("Saving...", "info")
-      this.inputTarget.value = this.editor.getHTML()
-      this.formTarget.requestSubmit()
-    } catch (error) {
-      console.error("Save error:", error)
-      this.showNotification("Error saving: " + error.message, "error")
-    }
+    this.showNotification("Saving...", "info")
+    this.inputTarget.value = this.editor.getHTML()
+    this.formTarget.requestSubmit()
   }
 
   showNotification(message, type = "info") {
@@ -116,45 +157,23 @@ export default class extends Controller {
     }, 3000)
   }
 
-  // Text formatting
+  // Toolbar actions
   toggleBold() { this.editor.chain().focus().toggleBold().run() }
   toggleItalic() { this.editor.chain().focus().toggleItalic().run() }
   toggleStrike() { this.editor.chain().focus().toggleStrike().run() }
   toggleUnderline() { this.editor.chain().focus().toggleUnderline().run() }
   
-  // Headings
   toggleHeading(event) {
     const level = parseInt(event.currentTarget.dataset.level)
     this.editor.chain().focus().toggleHeading({ level }).run()
   }
-
-  toggleParagraph() {
-    this.editor.chain().focus().setParagraph().run()
-  }
   
-  // Lists
   toggleBulletList() { this.editor.chain().focus().toggleBulletList().run() }
   toggleOrderedList() { this.editor.chain().focus().toggleOrderedList().run() }
+  toggleBlockquote() { this.editor.chain().focus().toggleBlockquote().run() }
+  toggleCodeBlock() { this.editor.chain().focus().toggleCodeBlock().run() }
+  insertHorizontalRule() { this.editor.chain().focus().setHorizontalRule().run() }
   
-  // Alignment
-  setAlignLeft() { this.editor.chain().focus().setTextAlign('left').run() }
-  setAlignCenter() { this.editor.chain().focus().setTextAlign('center').run() }
-  setAlignRight() { this.editor.chain().focus().setTextAlign('right').run() }
-  setAlignJustify() { this.editor.chain().focus().setTextAlign('justify').run() }
-  
-  // Links
-  setLink() {
-    const url = prompt("Enter URL:")
-    if (url) {
-      this.editor.chain().focus().setLink({ href: url }).run()
-    }
-  }
-
-  unsetLink() {
-    this.editor.chain().focus().unsetLink().run()
-  }
-
-  // Images
   triggerImageUpload() {
     this.fileInputTarget.click()
   }
@@ -164,8 +183,8 @@ export default class extends Controller {
       const file = event.target.files[0]
       if (!file) return
 
-      if (!file.type.startsWith('image/')) {
-        throw new Error('Please select an image file')
+      if (!file.type.startsWith("image/")) {
+        throw new Error("Please select an image file")
       }
 
       const formData = new FormData()
@@ -180,10 +199,12 @@ export default class extends Controller {
 
       const response = await fetch("/upload_image", {
         method: "POST",
-        body: formData,
         headers: {
-          "X-CSRF-Token": csrfToken
-        }
+          "X-CSRF-Token": csrfToken,
+          "Accept": "application/json"
+        },
+        body: formData,
+        credentials: "same-origin"
       })
 
       if (!response.ok) {
@@ -205,4 +226,20 @@ export default class extends Controller {
       event.target.value = ""
     }
   }
+
+  setLink() {
+    const url = prompt("Enter URL:")
+    if (url) {
+      this.editor.chain().focus().setLink({ href: url }).run()
+    }
+  }
+
+  unsetLink() {
+    this.editor.chain().focus().unsetLink().run()
+  }
+
+  setAlignLeft() { this.editor.chain().focus().setTextAlign("left").run() }
+  setAlignCenter() { this.editor.chain().focus().setTextAlign("center").run() }
+  setAlignRight() { this.editor.chain().focus().setTextAlign("right").run() }
+  setAlignJustify() { this.editor.chain().focus().setTextAlign("justify").run() }
 }

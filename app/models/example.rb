@@ -4,12 +4,12 @@ class Example < ApplicationRecord
   validates :title, presence: true
   validates :format, inclusion: { in: %w[default modern classic] }
 
-  before_save :generate_html
+  before_save :sync_html_with_content
 
   private
 
-  def generate_html
-    # В будущем здесь будет генерация HTML из content
-    self.html ||= content
+  def sync_html_with_content
+    # Always sync HTML with content
+    self.html = content if content_changed?
   end
 end

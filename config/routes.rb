@@ -10,17 +10,15 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  # root "posts#index"
-  #
   root "templates#index"
 
   resources :templates, only: [ :index, :show, :new, :create, :edit, :update, :destroy ]
 
   resources :examples do
     member do
-      get "download"
+      get "download", defaults: { format: "docx" }
     end
   end
 
-  match "/upload_image", to: "assets#upload", via: [ :post, :options ]
+  post "/assets/upload", to: "assets#upload"
 end

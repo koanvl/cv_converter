@@ -49,30 +49,24 @@ class ExamplesController < ApplicationController
   def download
     @example = Example.find(params[:id])
 
-    # Create temporary HTML file with our styles
-    html_content = <<-HTML
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8">
-          <style>
-            #{@example.css}
-          </style>
-        </head>
-        <body>
-          #{@example.html}
-        </body>
-      </html>
-    HTML
-
     respond_to do |format|
       format.docx {
-        # Convert HTML to DOCX
-        file_content = Htmltoword::Document.create(html_content, "#{@example.title}.docx")
-        send_data file_content,
-                  filename: "#{@example.title}.docx",
-                  type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                  disposition: "attachment"
+        begin
+          Rails.logger.debug "Converting HTML to DOCX"
+          Rails.logger.debug "Content: #{@example.content}"
+
+          # Convert HTML to DOCX
+          file_content = HtmlToDocxConverter.convert(@example.content, @example.css)
+
+          send_data file_content,
+                    filename: "#{@example.title}.docx",
+                    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    disposition: "attachment"
+        rescue => e
+          Rails.logger.error "Error converting to DOCX: #{e.message}"
+          Rails.logger.error e.backtrace.join("\n")
+          redirect_to @example, alert: "Error generating DOCX file: #{e.message}"
+        end
       }
     end
   end

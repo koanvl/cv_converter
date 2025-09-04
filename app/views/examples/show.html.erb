@@ -25,6 +25,11 @@
           <%# Preview with custom styles %>
           <div class="preview-container">
             <style>
+              /* Base styles for headings */
+              h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem; }
+              h2 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.875rem; }
+              h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; }
+              /* Custom styles */
               <%= @example.css %>
             </style>
             <div class="w-[210mm] mx-auto bg-white shadow-lg">
@@ -37,7 +42,7 @@
 
     <div class="flex justify-between items-center">
       <div class="flex gap-4">
-        <%= link_to "Download DOC", download_example_path(@example, format: :docx), class: "px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" %>
+        <%= link_to "Download DOC", download_example_path(@example), class: "px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" %>
         <%= link_to "Download PDF", "#", class: "px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600" %>
       </div>
       
