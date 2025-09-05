@@ -114,7 +114,6 @@ export default class extends Controller {
           template = `{{${fieldName}}}`
         }
 
-        // Оборачиваем в контекст, ТОЛЬКО ЕСЛИ клавиша Shift НЕ зажата
         if (arrayContext.length > 0 && !e.shiftKey) {
           const eachBlocks = arrayContext.map(array => `{{#each ${array}}}`).join('\n')
           const closingBlocks = arrayContext.map(() => `{{/each}}`).reverse().join('\n')
@@ -122,8 +121,20 @@ export default class extends Controller {
           template = `${eachBlocks}\n${indentedTemplate}\n${closingBlocks}`
         }
 
-        e.dataTransfer.setData('text/plain', template)
-        e.dataTransfer.effectAllowed = 'copy'
+        const lines = template.split('\n');
+
+        const htmlParagraphs = lines
+          .filter(line => line.trim() !== '')
+          .map(line => `<p>${line.trim()}</p>`)
+          .join('');
+
+        // ---- ИЗМЕНЕНИЕ ЗДЕСЬ ----
+        // Оборачиваем все параграфы в один родительский DIV
+        const finalHtml = `<div>${htmlParagraphs}</div>`;
+
+        e.dataTransfer.setData('text/html', finalHtml);
+        e.dataTransfer.setData('text/plain', template);
+        e.dataTransfer.effectAllowed = 'copy';
       })
     })
   }

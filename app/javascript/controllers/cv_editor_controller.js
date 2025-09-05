@@ -1,8 +1,8 @@
-// app/javascript/controllers/editor_controller.js
+// app/javascript/controllers/cv_editor_controller.js
 
 import { Controller } from "@hotwired/stimulus"
 import { Editor } from "@tiptap/core"
-import { TextSelection } from 'prosemirror-state'
+import { DOMParser } from 'prosemirror-model'
 
 // --- Tiptap Extensions ---
 import StarterKit from "@tiptap/starter-kit"
@@ -10,6 +10,11 @@ import Placeholder from "@tiptap/extension-placeholder"
 import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
 import TextAlign from "@tiptap/extension-text-align"
+
+// --- Custom Extensions ---
+import { FlexContainer } from "../extensions/flex_container"
+import { ResizableColumns } from "../extensions/resizable_columns"
+import { Column } from "../extensions/column"
 
 
 // --- Stimulus Controller ---
@@ -25,30 +30,63 @@ export default class extends Controller {
         Link.configure({ openOnClick: true, autolink: true }),
         Image,
         TextAlign.configure({ types: ["heading", "paragraph"] }),
+        FlexContainer,
+        ResizableColumns,
+        Column,
       ],
       editorProps: {
-        handleDrop: (view, event, slice, moved) => {
-          const text = event.dataTransfer.getData('text/plain');
-          if (text && text.startsWith('{{') && text.endsWith('}}')) {
-            const { tr } = view.state;
-            const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY });
-            if (coordinates) {
-              tr.insertText(text, coordinates.pos);
-              view.dispatch(tr);
-              return true;
-            }
+        handleDrop(view, event, slice, moved) {
+          if (moved) {
+            return false;
           }
+
+          const html = event.dataTransfer.getData('text/html');
+
+          if (html) {
+            const { state, dispatch } = view;
+            const parser = DOMParser.fromSchema(state.schema);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            const parsedContent = parser.parse(tempDiv, { preserveWhitespace: true });
+            const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY });
+            
+            if (coordinates) {
+              const pos = coordinates.pos;
+              const $pos = state.doc.resolve(pos);
+              
+              let transaction;
+
+              if ($pos.depth > 0) {
+                const targetNode = $pos.parent;
+                
+                if (targetNode.isBlock && targetNode.content.size === 0) {
+                  const from = $pos.before();
+                  const to = $pos.after();
+                  
+                  // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+                  // Используем .replaceWith() вместо .replace(). Он безопаснее и умнее.
+                  transaction = state.tr.replaceWith(from, to, parsedContent.content);
+
+                }
+              }
+
+              if (!transaction) {
+                transaction = state.tr.insert(pos, parsedContent.content);
+              }
+              
+              dispatch(transaction);
+            }
+
+            return true;
+          }
+
           return false;
-        },
+        }
       },
       content: this.inputTarget.value,
       onUpdate: ({ editor }) => {
-        
-        // Сохраняем HTML
         this.inputTarget.value = editor.getHTML()
-      },
-      onCreate: ({ editor }) => {
-
       },
     })
   }
@@ -76,6 +114,10 @@ export default class extends Controller {
   toggleBlockquote() { this.editor.chain().focus().toggleBlockquote().run() }
   toggleCodeBlock() { this.editor.chain().focus().toggleCodeBlock().run() }
   insertHorizontalRule() { this.editor.chain().focus().setHorizontalRule().run() }
+
+  // === Контейнеры ===
+  insertFlexContainer() { this.editor.chain().focus().setFlexContainer().run() }
+  insertResizableColumns() { this.editor.chain().focus().setResizableColumns().run() }
 
   // === Ссылки ===
   setLink() {
@@ -114,7 +156,7 @@ export default class extends Controller {
       console.error("Ошибка загрузки:", error)
       this.#showNotification(`Ошибка: ${error.message}`, "error")
     } finally {
-      event.target.value = "" // Сбрасываем инпут для повторной загрузки того же файла
+      event.target.value = ""
     }
   }
 

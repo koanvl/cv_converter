@@ -40,6 +40,7 @@
     "grapesjs": "^0.22.11",
     "grapesjs-blocks-basic": "^1.0.2",
     "grapesjs-preset-webpage": "^1.0.3",
+    "prosemirror-state": "^1.4.3",
     "tailwindcss": "^4.1.11"
   }
 }
