@@ -1,0 +1,296 @@
+<div data-controller="cv-editor">
+  <%= form_with(model: example, class: "space-y-6", data: { "cv-editor-target": "form" }) do |form| %>
+    <% if example.errors.any? %>
+      <div class="bg-red-50 p-4 rounded-md">
+        <h2 class="text-red-800 text-sm font-medium"><%= pluralize(example.errors.count, "error") %> prohibited this example from being saved:</h2>
+        <ul class="mt-3 list-disc list-inside text-red-600">
+          <% example.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :title, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :format, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.select :format, 
+          options_for_select([["Default", "default"], ["Modern", "modern"], ["Classic", "classic"]], example.format),
+          {}, 
+          class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div>
+      <%= form.label :published, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.check_box :published, class: "rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="mt-6">
+      <%# cv-editor Toolbar %>
+      <div class="flex flex-wrap items-center gap-1 p-2 bg-white border rounded-t mb-1">
+        <div class="relative" data-controller="dropdown">
+          <button type="button" 
+                  data-action="dropdown#toggle"
+                  class="flex items-center px-3 py-1.5 text-gray-700 rounded hover:bg-gray-100 transition-colors">
+            <span class="text-sm font-medium">Text</span>
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div data-dropdown-target="menu" 
+               class="absolute left-0 mt-1 w-40 bg-white border rounded-md shadow-lg hidden z-50">
+            <button type="button" data-action="cv-editor#toggleHeading" data-level="1" 
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 1</button>
+            <button type="button" data-action="cv-editor#toggleHeading" data-level="2"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 2</button>
+            <button type="button" data-action="cv-editor#toggleHeading" data-level="3"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 3</button>
+            <button type="button" data-action="cv-editor#toggleParagraph"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Paragraph</button>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="cv-editor#toggleBold" 
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Bold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
+            <path d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
+          </svg>
+        </button>
+
+        <button type="button" data-action="cv-editor#toggleItalic"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Italic">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="19" y1="4" x2="10" y2="4"></line>
+            <line x1="14" y1="20" x2="5" y2="20"></line>
+            <line x1="15" y1="4" x2="9" y2="20"></line>
+          </svg>
+        </button>
+
+        <button type="button" data-action="cv-editor#toggleStrike"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Strike">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M17.5,12h-11"></path>
+            <path d="M16.5,8a4,4,0,0,0-4-4h-2a4,4,0,0,0-4,4"></path>
+            <path d="M16.5,16a4,4,0,0,1-4,4h-2a4,4,0,0,1-4-4"></path>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="cv-editor#toggleBulletList"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Bullet List">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="9" y1="6" x2="20" y2="6"></line>
+            <line x1="9" y1="12" x2="20" y2="12"></line>
+            <line x1="9" y1="18" x2="20" y2="18"></line>
+            <circle cx="5" cy="6" r="2"></circle>
+            <circle cx="5" cy="12" r="2"></circle>
+            <circle cx="5" cy="18" r="2"></circle>
+          </svg>
+        </button>
+
+        <button type="button" data-action="cv-editor#toggleOrderedList"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Numbered List">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="10" y1="6" x2="21" y2="6"></line>
+            <line x1="10" y1="12" x2="21" y2="12"></line>
+            <line x1="10" y1="18" x2="21" y2="18"></line>
+            <path d="M4,6h1v4H4V6z M4,10h1 M4,18h1"></path>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="cv-editor#setAlignLeft"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Align Left">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="15" y2="12"></line>
+            <line x1="3" y1="18" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <button type="button" data-action="cv-editor#setAlignCenter"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Align Center">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="6" y1="12" x2="18" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+
+        <button type="button" data-action="cv-editor#setAlignRight"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Align Right">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="9" y1="12" x2="21" y2="12"></line>
+            <line x1="6" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+        <button type="button" data-action="cv-editor#setLink"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Add Link">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+        </button>
+
+        <button type="button" data-action="cv-editor#triggerImageUpload"
+                class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Add Image">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+
+      </div>
+
+      <%# cv-editor Content %>
+      <div data-cv-editor-target="element" class="prose max-w-none border rounded-b min-h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
+      <%= form.text_area :content, data: { "cv-editor-target": "input" }, class: "hidden" %>
+      <input type="file" accept="image/*" data-cv-editor-target="fileInput" style="display:none" data-action="change->cv-editor#handleFileUpload">
+    </div>
+
+    <div>
+      <%= form.label :css, "Custom CSS", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :css, rows: 5, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-mono text-sm" %>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <%= link_to "Cancel", examples_path, class: "px-4 py-2 border rounded-md hover:bg-gray-50" %>
+      <button type="button" data-action="cv-editor#save" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
+    </div>
+  <% end %>
+</div>
+
+<%# cv-editor styles %>
+<style>
+.ProseMirror {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 200px;
+}
+.ProseMirror:focus {
+  outline: 2px solid #3b82f6;
+}
+.ProseMirror p.is-cv-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Стилизация элементов контента */
+.ProseMirror h1 { font-size: 2em; font-weight: bold; }
+.ProseMirror h2 { font-size: 1.5em; font-weight: bold; }
+.ProseMirror h3 { font-size: 1.25em; font-weight: bold; }
+
+.ProseMirror strong { font-weight: bold; }
+.ProseMirror em { font-style: italic; }
+.ProseMirror s { text-decoration: line-through; }
+.ProseMirror u { text-decoration: underline; }
+
+.ProseMirror a {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #e2e8f0;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.ProseMirror pre {
+  background-color: #f7fafc;
+  color: #333;
+  font-family: monospace;
+  padding: 1rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.ProseMirror li { margin-bottom: 4px; }
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 2rem 0;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid #68cef8;
+}
+
+/* Стили для таблиц */
+.ProseMirror table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Класс для таблицы с рамками */
+.edit-template .ProseMirror table.custom-grid-table td,
+.edit-template .ProseMirror table.custom-grid-table th,
+.new-template .ProseMirror table.custom-grid-table td,
+.new-template .ProseMirror table.custom-grid-table th {
+  border: 1px dashed #ccc;
+  padding: 0.5rem;
+  vertical-align: top;
+  position: relative;
+}
+
+/* Стили по умолчанию для всех ячеек, если нет класса */
+.ProseMirror table td,
+.ProseMirror table th {
+  padding: 0.5rem;
+  vertical-align: top;
+  position: relative;
+}
+
+.ProseMirror th {
+  font-weight: bold;
+  text-align: left;
+  background-color: #f1f3f5;
+}
+
+/* Для изменения размера колонок */
+.column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background-color: #3b82f6;
+}
+</style>

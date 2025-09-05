@@ -1,6 +1,11 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-4xl mx-auto edit-template">
+<div class="w-full max-w-[1600px] flex justify-between gap-4 mx-auto px-4 py-8">
+  <div class="edit-template w-7/12">
     <h1 class="text-3xl font-bold mb-8">Edit Example</h1>
-    <%= render "form", example: @example %>
+    <%= render "form_2", example: @example %>
+  </div>
+  <div class="w-5/12">
+    <div class="mt-[260px] bg-white p-4 rounded-lg">
+    <%= render "json_template", example: @example %>
+    </div>
   </div>
 </div>

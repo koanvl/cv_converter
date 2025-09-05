@@ -20,6 +20,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :cv_templates do
+    member do
+      get "download", defaults: { format: "docx" }
+    end
+  end
+
   # CV Generator routes
   resources :cv_generators, path: "cv-generator" do
     member do

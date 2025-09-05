@@ -7,6 +7,9 @@ import { application } from "./application"
 import EditorController from "./editor_controller"
 application.register("editor", EditorController)
 
+import CvEditorController from "./cv_editor_controller"
+application.register("cv-editor", CvEditorController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
