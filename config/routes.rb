@@ -20,5 +20,19 @@ Rails.application.routes.draw do
     end
   end
 
+  # CV Generator routes
+  resources :cv_generators, path: "cv-generator" do
+    member do
+      post "generate/:example_id", to: "cv_generators#generate", as: "generate_with_template"
+    end
+  end
+
+  # CV Generation editing routes
+  resources :cv_generations, path: "cv-generation", only: [ :show, :edit, :update ] do
+    member do
+      get "edit_content", to: "cv_generations#edit_content"
+    end
+  end
+
   post "/assets/upload", to: "assets#upload"
 end

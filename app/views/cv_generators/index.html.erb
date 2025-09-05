@@ -1,0 +1,85 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">Resume Generator</h1>
+    <%= link_to "Add Candidate", new_cv_generator_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Candidates -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Candidates</h2>
+      
+      <% if @cv_candidates.any? %>
+        <div class="space-y-4">
+          <% @cv_candidates.each do |candidate| %>
+            <div class="border rounded-lg p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-medium text-lg"><%= candidate.name %></h3>
+                  <p class="text-gray-600 text-sm"><%= candidate.current_role %></p>
+                  <p class="text-gray-500 text-xs mt-1">
+                    Projects: <%= candidate.projects.count %> | 
+                    Skills: <%= candidate.skills_qualifications.count %>
+                  </p>
+                </div>
+                <div class="flex space-x-2">
+                  <%= link_to "View", cv_generator_path(candidate), 
+                      class: "text-blue-500 hover:text-blue-700 text-sm" %>
+                  <%= link_to "Edit", edit_cv_generator_path(candidate), 
+                      class: "text-green-500 hover:text-green-700 text-sm" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 text-center py-8">
+          No candidates yet. 
+          <%= link_to "Add your first", new_cv_generator_path, class: "text-blue-500 hover:text-blue-700" %>
+        </p>
+      <% end %>
+    </div>
+
+    <!-- Templates -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Available Templates</h2>
+      
+      <% if @examples.any? %>
+        <div class="space-y-4">
+          <% @examples.each do |example| %>
+            <div class="border rounded-lg p-4 hover:bg-gray-50">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-medium"><%= example.title %></h3>
+                  <p class="text-gray-600 text-sm">Format: <%= example.format.capitalize %></p>
+                </div>
+                <div class="flex space-x-2">
+                  <%= link_to "View", example_path(example), 
+                      class: "text-blue-500 hover:text-blue-700 text-sm" %>
+                  <%= link_to "Edit", edit_example_path(example), 
+                      class: "text-green-500 hover:text-green-700 text-sm" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 text-center py-8">
+          No templates available. 
+          <%= link_to "Create your first", new_example_path, class: "text-blue-500 hover:text-blue-700" %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="mt-8 bg-blue-50 rounded-lg p-6">
+    <h3 class="text-lg font-medium text-blue-900 mb-2">How to use the Resume Generator:</h3>
+    <ol class="list-decimal list-inside space-y-2 text-blue-800">
+      <li>Create a resume template in the "Examples" section, using variables like {{name}}, {{current_role}}</li>
+      <li>Add a candidate with JSON data</li>
+      <li>Select a candidate and generate a resume based on the template</li>
+      <li>Review the result and export if needed</li>
+    </ol>
+  </div>
+</div>

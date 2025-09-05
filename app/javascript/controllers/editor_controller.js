@@ -311,6 +311,47 @@ export default class extends Controller {
     return response.json()
   }
 
+  // === Переменные ===
+  insertVariable(key, label) {
+    if (!this.editor) return
+    
+    // Создаем специальный элемент для переменной
+    const variableHtml = `<span class="cv-variable" data-variable="${key}" style="background-color: #e3f2fd; padding: 2px 6px; border-radius: 4px; border: 1px solid #2196f3; color: #1976d2;">{{${key}}}</span>`
+    
+    this.editor.chain().focus().insertContent(variableHtml).run()
+    this.#showNotification(`Переменная "${label}" добавлена`, "success")
+  }
+
+  insertLoop(arrayName, label) {
+    if (!this.editor) return
+    
+    // Создаем шаблон цикла с примером содержимого
+    const loopHtml = `
+      <div class="cv-loop" style="border: 2px dashed #4caf50; padding: 10px; margin: 10px 0; background-color: #f1f8e9;">
+        <div style="font-size: 12px; color: #2e7d32; margin-bottom: 5px;">Цикл: ${arrayName}</div>
+        <span class="cv-variable" style="background-color: #c8e6c9; padding: 2px 6px; border-radius: 4px; border: 1px solid #4caf50; color: #1b5e20;">{{#each ${arrayName}}}</span>
+        <div style="margin: 10px 0; padding-left: 20px;">
+          <p>Содержимое цикла - добавьте переменные типа <span class="cv-variable" style="background-color: #e3f2fd; padding: 2px 6px; border-radius: 4px; border: 1px solid #2196f3; color: #1976d2;">{{title}}</span> и <span class="cv-variable" style="background-color: #e3f2fd; padding: 2px 6px; border-radius: 4px; border: 1px solid #2196f3; color: #1976d2;">{{description}}</span></p>
+        </div>
+        <span class="cv-variable" style="background-color: #c8e6c9; padding: 2px 6px; border-radius: 4px; border: 1px solid #4caf50; color: #1b5e20;">{{/each}}</span>
+      </div>
+    `
+    
+    this.editor.chain().focus().insertContent(loopHtml).run()
+    this.#showNotification(`Цикл "${label}" добавлен`, "success")
+  }
+
+  // Метод для показа модального окна выбора переменных
+  showVariablePicker() {
+    const variablePicker = document.querySelector('[data-controller*="variable-picker"]')
+    if (variablePicker) {
+      const pickerController = this.application.getControllerForElementAndIdentifier(variablePicker, 'variable-picker')
+      if (pickerController && pickerController.showModal) {
+        pickerController.showModal()
+      }
+    }
+  }
+
   // === Уведомления ===
   #showNotification(message, type = "info") {
     const notification = document.createElement("div")

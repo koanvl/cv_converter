@@ -1,0 +1,161 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="flex items-center mb-6">
+      <%= link_to cv_generators_path, class: "text-gray-600 hover:text-gray-900 mr-4" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      <% end %>
+      <h1 class="text-2xl font-bold">Add Candidate</h1>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <%= form_with model: @cv_candidate, url: cv_generators_path, class: "space-y-6" do |form| %>
+        <% if @cv_candidate.errors.any? %>
+          <div class="bg-red-50 p-4 rounded-md">
+            <h2 class="text-red-800 text-sm font-medium">
+              <%= pluralize(@cv_candidate.errors.count, "error") %> prohibited this candidate from being saved:
+            </h2>
+            <ul class="mt-3 list-disc list-inside text-red-600">
+              <% @cv_candidate.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div>
+          <%= form.label :name, "Candidate Name", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :name, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        </div>
+
+        <div>
+          <%= form.label :original_resume, "Original Resume (optional)", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_area :original_resume, rows: 4, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+          <p class="mt-1 text-sm text-gray-500">Original resume text for reference</p>
+        </div>
+
+        <div>
+          <%= form.label :structured_data, "JSON Data", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_area :structured_data, 
+              value: @cv_candidate.structured_data&.to_json || sample_json,
+              rows: 15, 
+              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-mono text-sm" %>
+          <p class="mt-1 text-sm text-gray-500">
+            JSON structure with candidate data. 
+            <button type="button" onclick="loadSampleData()" class="text-blue-500 hover:text-blue-700">
+              Load Example
+            </button>
+          </p>
+        </div>
+
+        <div class="flex justify-end gap-4">
+          <%= link_to "Cancel", cv_generators_path, class: "px-4 py-2 border rounded-md hover:bg-gray-50" %>
+          <%= form.submit "Create Candidate", class: "px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+function loadSampleData() {
+  const sampleData = {
+    "name": "John Smith",
+    "current_role": "Full Stack Developer",    
+    "projects": [
+      {
+        "id": "project_1",
+        "title": "E-commerce Platform",
+        "rows": [
+          {
+            "title": "Project name",
+            "description": "Online Store"
+          },
+          {
+            "title": "Overview",
+            "description": "Built a modern e-commerce platform using React and Node.js with microservices architecture. Implemented payment processing, inventory management, and real-time order tracking."
+          },
+          {
+            "title": "Technologies",
+            "description": "React, Node.js, MongoDB, Docker, Kubernetes"
+          },
+          {
+            "title": "Role",
+            "description": "Lead Full Stack Developer"
+          },
+          {
+            "title": "Common tasks",
+            "description": "• Develop frontend components\n• Design and implement APIs\n• Optimize application performance\n• Lead development team\n• Code reviews and mentoring"
+          },
+          {
+            "title": "Duration",
+            "description": "18 months"
+          }
+        ]
+      },
+      {
+        "id": "project_2",
+        "title": "Analytics Dashboard",
+        "rows": [
+          {
+            "title": "Project name",
+            "description": "Business Intelligence Tool"
+          },
+          {
+            "title": "Overview",
+            "description": "Created a real-time analytics dashboard for business metrics visualization. Implemented data processing pipeline and interactive charts."
+          },
+          {
+            "title": "Technologies",
+            "description": "Vue.js, TypeScript, GraphQL, PostgreSQL, Redis, AWS"
+          },
+          {
+            "title": "Role",
+            "description": "Senior Full Stack Developer"
+          },
+          {
+            "title": "Common tasks",
+            "description": "• Design system architecture\n• Implement data visualization\n• Optimize database queries\n• Set up CI/CD pipelines\n• Performance monitoring"
+          },
+          {
+            "title": "Duration",
+            "description": "12 months"
+          }
+        ]
+      }
+    ],
+    "languages": [
+      {
+        "title": "English",
+        "level": "Native"
+      },
+      {
+        "title": "Spanish",
+        "level": "Professional"
+      }
+    ],
+    "skills_qualifications": [
+      {
+        "title": "Frontend Development",
+        "description": "React, Vue.js, TypeScript, HTML5, CSS3"
+      },
+      {
+        "title": "Backend Development",
+        "description": "Node.js, GraphQL, REST APIs"
+      },
+      {
+        "title": "Database Technologies",
+        "description": "PostgreSQL, MongoDB, Redis"
+      },
+      {
+        "title": "DevOps & Cloud",
+        "description": "Docker, Kubernetes, AWS"
+      }
+    ]
+  };
+  
+  document.querySelector('#cv_candidate_structured_data').value = JSON.stringify(sampleData, null, 2);
+}
+</script>
+

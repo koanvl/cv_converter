@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  example: one
+  cv_candidate: one
+  generated_html: MyText
+  generated_css: MyText
+
+two:
+  example: two
+  cv_candidate: two
+  generated_html: MyText
+  generated_css: MyText

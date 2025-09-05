@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_04_110000) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_05_091512) do
+  create_table "cv_candidates", force: :cascade do |t|
+    t.string "name"
+    t.text "original_resume"
+    t.json "structured_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cv_generations", force: :cascade do |t|
+    t.integer "example_id", null: false
+    t.integer "cv_candidate_id", null: false
+    t.text "generated_html"
+    t.text "generated_css"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cv_candidate_id"], name: "index_cv_generations_on_cv_candidate_id"
+    t.index ["example_id"], name: "index_cv_generations_on_example_id"
+  end
+
   create_table "examples", force: :cascade do |t|
     t.string "title", null: false
     t.text "content"
@@ -32,4 +51,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_04_110000) do
     t.text "html"
     t.text "css"
   end
+
+  add_foreign_key "cv_generations", "cv_candidates"
+  add_foreign_key "cv_generations", "examples"
 end
