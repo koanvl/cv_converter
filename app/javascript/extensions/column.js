@@ -1,19 +1,29 @@
-// column.js
-import { Node, mergeAttributes } from '@tiptap/core'
+import { Node, mergeAttributes } from '@tiptap/core';
 
+/**
+ * Узел "Колонка".
+ * Он не должен содержать никакой логики, связанной с его шириной.
+ * Шириной управляет родительский узел ResizableColumns.
+ */
 export const Column = Node.create({
   name: 'column',
-  // Контент внутри колонки - это один или несколько блочных элементов
   content: 'block+',
-  // Эта нода является частью ноды resizableColumns
   defining: true,
 
   parseHTML() {
-    return [{ tag: 'div.col' }]
+    // Указываем, что парсить нужно div с классом 'col'
+    return [{ tag: 'div.col' }];
   },
 
   renderHTML({ HTMLAttributes }) {
-    // 0 означает "дырку", куда Tiptap вставит контент (content: 'block+')
-    return ['div', mergeAttributes(HTMLAttributes, { class: 'col border border-gray-300 dashed w-1/2' }), 0]
+    // [ИСПРАВЛЕНО] УБРАН КЛАСС w-1/2, который мешал динамическому изменению ширины.
+    // Остальные классы для стилизации рамки можно оставить.
+    const attrs = mergeAttributes(HTMLAttributes, {
+      class: 'col border border-gray-300 dashed w-1/2 p-2',
+      'data-type': 'column',
+      style: '',
+    });
+    // 0 — это место, куда Tiptap вставит дочерние элементы (параграфы и т.д.)
+    return ['div', attrs, 0];
   },
-})
+});
