@@ -1,0 +1,48 @@
+<%# This template renders a draggable JSON structure %>
+<div class="json-template">
+  <pre>
+    <code class="language-json" style="white-space: pre-wrap; word-wrap: break-word;">
+      {
+  <span class="json-field" draggable="true" data-field="name">"name"</span>: "John Smith",
+  <span class="json-field" draggable="true" data-field="current_role">"current_role"</span>: "Full Stack Developer",
+  <span class="json-field" draggable="true" data-field="projects">"projects"</span>: [
+    {
+      <span class="json-field" draggable="true" data-field="id">"id"</span>: "project_1",
+      <span class="json-field" draggable="true" data-field="title">"title"</span>: "E-commerce Platform",
+      <span class="json-field" draggable="true" data-field="rows">"rows"</span>: [
+        {
+          <span class="json-field" draggable="true" data-field="title">"title"</span>: "Project name",
+          <span class="json-field" draggable="true" data-field="description">"description"</span>: "Online Store"
+        }
+      ]
+    }
+  ]
+}</code>
+  </pre>
+</div>
+
+<style>
+.json-field {
+  cursor: grab;
+  color: #2563eb;
+  user-select: none;
+}
+
+.json-field:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+  border-radius: 4px;
+}
+
+.json-field:active {
+  cursor: grabbing;
+}
+</style>
+
+<script>
+document.querySelectorAll('.json-field').forEach(field => {
+  field.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', `{{${e.target.dataset.field}}}`);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+});
+</script>

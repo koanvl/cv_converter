@@ -18,3 +18,6 @@ application.register("template-editor", TemplateEditorController)
 
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
+
+import JsonTemplateController from "./json_template_controller"
+application.register("json-template", JsonTemplateController)

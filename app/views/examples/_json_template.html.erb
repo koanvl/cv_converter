@@ -1,7 +1,4 @@
-<div class="json-template">
-  <pre>
-    <code class="language-json" style="white-space: pre-wrap; word-wrap: break-word;">
-      {
+<% json_template=  {
   "name": "John Smith",
   "current_role": "Full Stack Developer",
   "projects": [
@@ -94,7 +91,54 @@
       "description": "Docker, Kubernetes, AWS"
     }
   ]
-}
+}%>
+
+<div class="json-template max-h-[600px] overflow-y-scroll" 
+     data-controller="json-template"
+     data-json-template-json-value="<%= json_template.to_json %>"
+     data-json-template-target="output">
+  <pre>
+    <code class="language-json" style="white-space: pre-wrap; word-wrap: break-word;">
+     
     </code>
   </pre>
 </div>
+<style>
+.json-field {
+  cursor: grab;
+  color: #2563eb;
+  user-select: none;
+  position: relative;
+}
+
+.json-field:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+  border-radius: 4px;
+}
+
+.json-field:active {
+  cursor: grabbing;
+}
+
+.json-array-field {
+  color: #7c3aed; /* Фиолетовый цвет для массивов */
+}
+
+.json-array-field::after {
+  content: '[]';
+  font-size: 0.8em;
+  position: absolute;
+  top: -0.5em;
+  margin-left: 2px;
+  opacity: 0.7;
+}
+</style>
+
+<script>
+document.querySelectorAll('.json-field').forEach(field => {
+  field.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', `{{${e.target.dataset.field}}}`);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+});
+</script>

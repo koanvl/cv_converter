@@ -26,6 +26,21 @@ export default class extends Controller {
         Image,
         TextAlign.configure({ types: ["heading", "paragraph"] }),
       ],
+      editorProps: {
+        handleDrop: (view, event, slice, moved) => {
+          const text = event.dataTransfer.getData('text/plain');
+          if (text && text.startsWith('{{') && text.endsWith('}}')) {
+            const { tr } = view.state;
+            const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY });
+            if (coordinates) {
+              tr.insertText(text, coordinates.pos);
+              view.dispatch(tr);
+              return true;
+            }
+          }
+          return false;
+        },
+      },
       content: this.inputTarget.value,
       onUpdate: ({ editor }) => {
         

@@ -1,0 +1,27 @@
+.json-template pre {
+  margin: 0;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+}
+
+.json-field, .json-value {
+  cursor: grab;
+  color: #2563eb;
+  user-select: none;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.json-field:hover, .json-value:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+}
+
+.json-field:active, .json-value:active {
+  cursor: grabbing;
+}
+
+.json-value {
+  color: #059669;
+}
