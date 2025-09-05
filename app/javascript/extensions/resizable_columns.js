@@ -23,7 +23,7 @@ export const ResizableColumns = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     // Эта функция будет использоваться как fallback, если NodeView по какой-то причине не сработает
-    return ['div', mergeAttributes(HTMLAttributes, { 'data-type': this.name, class: 'resizable-columns-container' }), 0]
+    return ['div', mergeAttributes(HTMLAttributes, { 'data-type': this.name, class: 'resizable-columns-container', style: 'display: flex; justify-content: space-between; gap: 1rem; position: relative;' }), 0]
   },
 
   addNodeView() {
@@ -31,10 +31,12 @@ export const ResizableColumns = Node.create({
       // Основной контейнер
       const container = document.createElement('div');
       container.className = 'flex justify-between gap-4 relative';
+      container.style = 'display: flex; justify-content: space-between; gap: 1rem; position: relative;';
 
       // Контейнер для дочерних нод (колонок). Tiptap сам вставит их сюда.
       const content = document.createElement('div');
       content.className = 'flex-grow flex justify-between gap-4';
+      container.style = 'display: flex; justify-content: space-between; gap: 1rem; position: relative;';
       container.appendChild(content);
 
       // Применяем сохраненную ширину при отрисовке
