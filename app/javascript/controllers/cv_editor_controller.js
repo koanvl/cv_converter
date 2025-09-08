@@ -227,6 +227,44 @@ export default class extends Controller {
     this.fileInputTarget.click()
   }
 
+  insertImageByUrl() {
+    const url = window.prompt("Enter image URL:")
+    if (url) {
+      // Проверяем, является ли URL действительным
+      const isValidUrl = (string) => {
+        try {
+          new URL(string)
+          return true
+        } catch (_) {
+          return false
+        }
+      }
+
+      if (!isValidUrl(url)) {
+        this.#showNotification("Please enter a valid URL", "error")
+        return
+      }
+
+      // Проверяем, что URL указывает на изображение
+      const isImage = url.match(/\.(jpeg|jpg|gif|png|webp|svg)($|\?)/) != null
+      if (!isImage) {
+        this.#showNotification("URL must point to an image file", "error")
+        return
+      }
+
+      // Пробуем загрузить изображение
+      const testImage = document.createElement('img')
+      testImage.onerror = () => {
+        this.#showNotification("Failed to load image from URL", "error")
+      }
+      testImage.onload = () => {
+        this.editor.chain().focus().setImage({ src: url }).run()
+        this.#showNotification("Image inserted successfully", "success")
+      }
+      testImage.src = url
+    }
+  }
+
   async handleFileUpload(event) {
     const file = event.target.files[0]
     if (!file || !file.type.startsWith("image/")) return
