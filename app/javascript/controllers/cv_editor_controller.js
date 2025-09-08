@@ -10,6 +10,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
 import TextAlign from "@tiptap/extension-text-align"
+import { Color, TextStyle } from '@tiptap/extension-text-style'
 
 // --- Custom Extensions ---
 import { FlexContainer } from "../extensions/flex_container"
@@ -33,6 +34,8 @@ export default class extends Controller {
         FlexContainer,
         ResizableColumns,
         Column,
+        Color,
+        TextStyle
       ],
       editorProps: {
         handleDrop(view, event, slice, moved) {
@@ -114,6 +117,16 @@ export default class extends Controller {
   toggleBlockquote() { this.editor.chain().focus().toggleBlockquote().run() }
   toggleCodeBlock() { this.editor.chain().focus().toggleCodeBlock().run() }
   insertHorizontalRule() { this.editor.chain().focus().setHorizontalRule().run() }
+
+  // === Text color === 
+  changeColor(e) { 
+    this.editor.chain().focus().setColor(e.currentTarget.dataset.color).run()
+    const buttons = document.querySelectorAll("button[data-action='cv-editor#changeColor']")
+    buttons.forEach(button => {
+      button.classList.remove("border-2", "border-gray-500")
+    })
+    e.currentTarget.classList.add("border-2", "border-gray-500") 
+  }
 
   // === Контейнеры ===
   insertFlexContainer() { this.editor.chain().focus().setFlexContainer().run() }
