@@ -54,6 +54,7 @@ import TextAlign from "@tiptap/extension-text-align"
 import { Color, TextStyle, FontSize } from '@tiptap/extension-text-style'
 import { Pagination } from 'tiptap-pagination-breaks'
 import { ImagePlus } from 'tiptap-image-plus'
+import { Focus } from '@tiptap/extensions'
 
 // --- Custom Extensions ---
 import { FlexContainer } from "../extensions/flex_container"
@@ -66,6 +67,9 @@ export default class extends Controller {
   static targets = ["element", "input", "fileInput", "form"]
 
   connect() {
+    // Создаем контекстное меню
+    this.createContextMenu()
+
     // Преобразуем Handlebars теги в специальные узлы
     const initialContent = this.inputTarget.value.replace(/\{\{([^}]+)\}\}/g, (match, content) => {
       return `<span data-type="handlebars" data-content="${content.trim()}">${match}</span>`
@@ -105,7 +109,11 @@ export default class extends Controller {
               padding: "0",
               borderRadius: "0",
           }
-      })
+      }),
+      Focus.configure({
+        className: 'has-focus',
+        mode: 'shallowest',
+      }),
       ],
       editorProps: {
         handleDrop(view, event, slice, moved) {
@@ -338,4 +346,103 @@ export default class extends Controller {
       notification.remove()
     }, 3000)
   }
+
+  createContextMenu() {
+    // Создаем элемент контекстного меню
+    const menu = document.createElement('div')
+    menu.className = 'hidden fixed bg-white shadow-lg rounded-md py-2 z-50'
+    menu.style.minWidth = '150px'
+    menu.id = 'editor-context-menu'
+
+    // Добавляем пункт "Удалить"
+    const deleteItem = document.createElement('div')
+    deleteItem.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer'
+    deleteItem.textContent = 'Удалить'
+    deleteItem.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      
+      const { state } = this.editor
+      const { selection } = state
+      let $pos = selection.$anchor
+      
+      // Поднимаемся по дереву узлов, пока не найдем нужный тип
+      let targetNode = null
+      let depth = $pos.depth
+      
+      while (depth > 0) {
+        const node = $pos.node(depth)
+        if (node.type.name === 'flexContainer' || node.type.name === 'resizableColumns') {
+          targetNode = node
+          break
+        }
+        depth--
+      }
+      
+      if (targetNode) {
+        this.deleteNode(targetNode.type.name)
+      }
+      
+      this.hideContextMenu()
+    })
+    menu.appendChild(deleteItem)
+
+    // Добавляем меню в DOM
+    document.body.appendChild(menu)
+
+    // Добавляем обработчик контекстного меню в редактор
+    this.elementTarget.addEventListener('contextmenu', (e) => this.handleContextMenu(e))
+
+    // Предотвращаем скрытие меню при клике по нему
+    menu.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+    })
+
+    // Добавляем обработчик клика вне меню для его скрытия
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target)) {
+        this.hideContextMenu()
+      }
+    })
+    document.addEventListener('scroll', () => this.hideContextMenu())
+  }
+
+  handleContextMenu(e) {
+    e.preventDefault()
+    const focusedNode = this.elementTarget.querySelector('.has-focus')
+    
+    if (focusedNode) {
+      const menu = document.getElementById('editor-context-menu')
+      menu.style.display = 'block'
+      
+      // Позиционируем меню
+      const rect = this.elementTarget.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+
+      // Проверяем, не выходит ли меню за пределы экрана
+      const menuRect = menu.getBoundingClientRect()
+      const maxX = window.innerWidth - menuRect.width
+      const maxY = window.innerHeight - menuRect.height
+
+      menu.style.left = Math.min(e.clientX, maxX) + 'px'
+      menu.style.top = Math.min(e.clientY, maxY) + 'px'
+    }
+  }
+
+  hideContextMenu() {
+    const menu = document.getElementById('editor-context-menu')
+    if (menu) {
+      menu.style.display = 'none'
+    }
+  }
+
+    deleteNode(nodeType) {
+      if (nodeType === 'flexContainer') {
+        this.editor.chain().focus().lift('flexContainer').run()
+      } else if (nodeType === 'resizableColumns') {
+        this.editor.chain().focus().deleteNode('resizableColumns').run()
+      }
+    }
 }

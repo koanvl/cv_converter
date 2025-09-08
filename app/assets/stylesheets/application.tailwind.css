@@ -40,3 +40,16 @@ body {
   border-top: 1px dashed #ccc;
   margin: 10px 0;
 }
+
+.has-focus:not(.is-empty):not(p):not(span):not(h3) {
+  @apply outline-blue-300 outline-2 rounded
+}
+
+#editor-context-menu {
+  @apply shadow-lg bg-white rounded-md py-2 border border-gray-200;
+  min-width: 150px;
+}
+
+#editor-context-menu div {
+  @apply px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 text-sm;
+}
