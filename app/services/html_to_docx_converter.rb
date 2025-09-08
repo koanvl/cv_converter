@@ -2,16 +2,16 @@
 
 class HtmlToDocxConverter
   FONT_SIZE_MAP = {
-    10 => 20,   # 10px -> 20pt
-    12 => 24,   # 12px -> 24pt
-    14 => 28,   # 14px -> 28pt
-    16 => 32,   # 16px -> 32pt
-    18 => 36,   # 18px -> 36pt
-    20 => 40,   # 20px -> 40pt
-    24 => 48,   # 24px -> 48pt
-    28 => 56,   # 28px -> 56pt
-    32 => 64,   # 32px -> 64pt
-    36 => 72    # 36px -> 72pt
+    11 => 8,   # 11px -> 8pt
+    12 => 9,   # 12px -> 9pt
+    13 => 10,   # 13px -> 10pt
+    15 => 11,   # 15px -> 11pt
+    16 => 12,   # 16px -> 12pt
+    19 => 14,   # 19px -> 14pt
+    21 => 16,   # 21px -> 16pt
+    24 => 18,   # 24px -> 18pt
+    27 => 20,   # 27px -> 20pt
+    32 => 24    # 32px -> 24pt
   }.freeze
 
   def self.convert(html_content, css_content = nil)
