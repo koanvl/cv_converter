@@ -23,7 +23,7 @@ img[style*="text-align:left"] {
 }
 
 div[role="textbox"] {
-  @apply h-[277mm] ps-[20mm] py-[10mm] pe-[10mm]
+  @apply min-h-[277mm] ps-[20mm] py-[10mm] pe-[10mm]
 }
 
 body {
@@ -32,4 +32,11 @@ body {
 
 .table-bordered {
   @apply border-collapse border border-gray-300;
+}
+
+.page-break {
+  height: 20px;
+  width: 100%;
+  border-top: 1px dashed #ccc;
+  margin: 10px 0;
 }

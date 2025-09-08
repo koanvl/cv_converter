@@ -32,7 +32,7 @@ export const ResizableColumns = Node.create({
 
       // Контейнер для дочерних нод (колонок)
       const content = document.createElement('div')
-      content.className = 'flex-grow flex justify-between'
+      content.className = 'flex-grow flex justify-between flex-wrap'
       container.appendChild(content)
 
       return {

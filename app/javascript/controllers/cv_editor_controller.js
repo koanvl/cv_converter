@@ -52,6 +52,7 @@ import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
 import TextAlign from "@tiptap/extension-text-align"
 import { Color, TextStyle, FontSize } from '@tiptap/extension-text-style'
+import { Pagination } from 'tiptap-pagination-breaks';
 
 // --- Custom Extensions ---
 import { FlexContainer } from "../extensions/flex_container"
@@ -88,7 +89,14 @@ export default class extends Controller {
         Column,
         Color,
         TextStyle,
-        FontSize
+        FontSize,
+        Pagination.configure({
+          pageHeight: 2600, // default height of the page
+          pageWidth: 816,   // default width of the page
+          pageMargin: 96,   // default margin of the page
+           label: 'Page',     // default Page,
+          showPageNumber: true  // default true,
+        }),
       ],
       editorProps: {
         handleDrop(view, event, slice, moved) {
@@ -146,7 +154,7 @@ export default class extends Controller {
       },
     })
   }
-
+  
   disconnect() {
     this.editor?.destroy()
   }

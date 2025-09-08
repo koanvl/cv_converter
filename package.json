@@ -33,6 +33,7 @@
     "@tiptap/extension-table-header": "^3.4.0",
     "@tiptap/extension-table-row": "^3.4.0",
     "@tiptap/extension-text-align": "^3.4.0",
+    "@tiptap/extension-text-style": "^3.4.1",
     "@tiptap/extension-underline": "^3.4.0",
     "@tiptap/pm": "^3.4.0",
     "@tiptap/prosemirror-tables": "^1.1.4",
@@ -41,6 +42,7 @@
     "grapesjs-blocks-basic": "^1.0.2",
     "grapesjs-preset-webpage": "^1.0.3",
     "prosemirror-state": "^1.4.3",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "tiptap-pagination-breaks": "^1.0.3"
   }
 }
