@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   resources :cv_generations, path: "cv-generation", only: [ :show, :edit, :update ] do
     member do
       get "edit_content", to: "cv_generations#edit_content"
+      get "download_docx", to: "cv_generations#download_docx"
     end
   end
 
