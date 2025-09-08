@@ -52,7 +52,8 @@ import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
 import TextAlign from "@tiptap/extension-text-align"
 import { Color, TextStyle, FontSize } from '@tiptap/extension-text-style'
-import { Pagination } from 'tiptap-pagination-breaks';
+import { Pagination } from 'tiptap-pagination-breaks'
+import { ImagePlus } from 'tiptap-image-plus'
 
 // --- Custom Extensions ---
 import { FlexContainer } from "../extensions/flex_container"
@@ -92,11 +93,19 @@ export default class extends Controller {
         FontSize,
         Pagination.configure({
           pageHeight: 2600, // default height of the page
-          pageWidth: 816,   // default width of the page
-          pageMargin: 96,   // default margin of the page
-           label: 'Page',     // default Page,
+          pageWidth: 864,   // default width of the page
+          pageMargin: 0,   // default margin of the page
+          label: 'Page',     // default Page,
           showPageNumber: true  // default true,
         }),
+        ImagePlus.configure({
+          wrapperStyle: { background: 'white', borderRadius: '10px' },
+          containerStyle: {
+              background: "transparent",
+              padding: "0",
+              borderRadius: "0",
+          }
+      })
       ],
       editorProps: {
         handleDrop(view, event, slice, moved) {

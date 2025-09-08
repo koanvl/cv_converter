@@ -19,9 +19,9 @@ export const Column = Node.create({
     // [ИСПРАВЛЕНО] УБРАН КЛАСС w-1/2, который мешал динамическому изменению ширины.
     // Остальные классы для стилизации рамки можно оставить.
     const attrs = mergeAttributes(HTMLAttributes, {
-      class: 'col border border-gray-300 dashed w-1/2 p-2',
+      class: 'col border border-gray-300 w-1/2 p-2',
       'data-type': 'column',
-      style: '',
+      style: 'border: 1px solid #d1d5db; width: 50%; padding: 0.5rem;',
     });
     // 0 — это место, куда Tiptap вставит дочерние элементы (параграфы и т.д.)
     return ['div', attrs, 0];

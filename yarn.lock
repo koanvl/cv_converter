@@ -1240,6 +1240,11 @@ tar@^7.4.3:
     mkdirp "^3.0.1"
     yallist "^5.0.0"
 
+tiptap-image-plus@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tiptap-image-plus/-/tiptap-image-plus-1.0.5.tgz#ac88914955e9cc613687e8e42df86c4b43a805de"
+  integrity sha512-1QJ4VFqB5OjM8CtYxdUifo/6glF0+LO03ZkOGP20iS3qrtldB4fVvlzWtYX9xHJHhs+t2CmVbVRCXGuxUMHmLw==
+
 tiptap-pagination-breaks@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiptap-pagination-breaks/-/tiptap-pagination-breaks-1.0.3.tgz#b160a176e3e7b4c51d0337404a2c0a96ec6821f9"

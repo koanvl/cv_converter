@@ -212,7 +212,7 @@
       </div>
 
       <%# cv-editor Content %>
-      <div data-cv-editor-target="element" class="prose max-w-none border rounded-b min-h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
+      <div data-cv-editor-target="element" class="prose max-w-none border rounded-b bg-white"></div>
       <%= form.text_area :content, data: { "cv-editor-target": "input" }, class: "hidden" %>
       <input type="file" accept="image/*" data-cv-editor-target="fileInput" style="display:none" data-action="change->cv-editor#handleFileUpload">
     </div>
