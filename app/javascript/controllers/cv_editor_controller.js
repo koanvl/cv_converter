@@ -3,6 +3,47 @@
 import { Controller } from "@hotwired/stimulus"
 import { Editor } from "@tiptap/core"
 import { DOMParser } from 'prosemirror-model'
+import { Node } from '@tiptap/core'
+
+// Custom Handlebars Node
+const HandlebarsNode = Node.create({
+  name: 'handlebars',
+  group: 'inline',
+  inline: true,
+  selectable: true,
+  atom: true,
+
+  addAttributes() {
+    return {
+      content: {
+        default: ''
+      }
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'span[data-type="handlebars"]'
+      }
+    ]
+  },
+
+  renderHTML({ node }) {
+    return ['span', { 'data-type': 'handlebars' }, `{{${node.attrs.content}}}`]
+  },
+
+  addCommands() {
+    return {
+      setHandlebars: (content) => ({ commands }) => {
+        return commands.insertContent({
+          type: this.name,
+          attrs: { content }
+        })
+      }
+    }
+  }
+})
 
 // --- Tiptap Extensions ---
 import StarterKit from "@tiptap/starter-kit"
@@ -10,7 +51,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import Link from "@tiptap/extension-link"
 import Image from "@tiptap/extension-image"
 import TextAlign from "@tiptap/extension-text-align"
-import { Color, TextStyle } from '@tiptap/extension-text-style'
+import { Color, TextStyle, FontSize } from '@tiptap/extension-text-style'
 
 // --- Custom Extensions ---
 import { FlexContainer } from "../extensions/flex_container"
@@ -23,10 +64,21 @@ export default class extends Controller {
   static targets = ["element", "input", "fileInput", "form"]
 
   connect() {
+    // Преобразуем Handlebars теги в специальные узлы
+    const initialContent = this.inputTarget.value.replace(/\{\{([^}]+)\}\}/g, (match, content) => {
+      return `<span data-type="handlebars" data-content="${content.trim()}">${match}</span>`
+    })
+
     this.editor = new Editor({
       element: this.elementTarget,
       extensions: [
-        StarterKit,
+        StarterKit.configure({
+          paragraph: {
+            keepMarks: true,
+            keepAttributes: true
+          }
+        }),
+        HandlebarsNode,
         Placeholder.configure({ placeholder: "Start typing..." }),
         Link.configure({ openOnClick: true, autolink: true }),
         Image,
@@ -35,7 +87,8 @@ export default class extends Controller {
         ResizableColumns,
         Column,
         Color,
-        TextStyle
+        TextStyle,
+        FontSize
       ],
       editorProps: {
         handleDrop(view, event, slice, moved) {
@@ -100,7 +153,17 @@ export default class extends Controller {
 
   save(event) {
     event.preventDefault()
-    this.inputTarget.value = this.editor.getHTML()
+    let html = this.editor.getHTML()
+    
+    // Удаляем параграфы только вокруг Handlebars each-тегов
+    html = html.replace(/<p>\s*(\{\{#each[^}]+\}\})\s*<\/p>/g, '$1')
+    html = html.replace(/<p>\s*(\{\{\/each\}\})\s*<\/p>/g, '$1')
+    
+    // Добавляем перенос строки после each-тегов для лучшей читаемости
+    html = html.replace(/(\{\{#each[^}]+\}\})/g, '$1\n')
+    html = html.replace(/(\{\{\/each\}\})/g, '\n$1\n')
+    
+    this.inputTarget.value = html
     this.formTarget.requestSubmit()
   }
 
@@ -126,6 +189,17 @@ export default class extends Controller {
       button.classList.remove("border-2", "border-gray-500")
     })
     e.currentTarget.classList.add("border-2", "border-gray-500") 
+  }
+
+  // === Text size ===
+  changeFontSize(e) {
+    console.log(e.currentTarget.dataset.fontSize)
+    this.editor.chain().focus().setFontSize(e.currentTarget.dataset.fontSize).run()
+    const buttons = document.querySelectorAll("button[data-action='cv-editor#changeFontSize']")
+    buttons.forEach(button => {
+      button.classList.remove("border-2", "border-gray-500")
+    })
+    e.currentTarget.classList.add("border-2", "border-gray-500")
   }
 
   // === Контейнеры ===

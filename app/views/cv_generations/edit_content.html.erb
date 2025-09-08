@@ -14,8 +14,8 @@
       </span>
     </div>
 
-    <div data-controller="editor">
-      <%= form_with model: @cv_generation, url: cv_generation_path(@cv_generation), method: :patch, class: "space-y-6", data: { "editor-target": "form" } do |form| %>
+    <div data-controller="cv-editor">
+      <%= form_with model: @cv_generation, url: cv_generation_path(@cv_generation), method: :patch, class: "space-y-6", data: { "cv-editor-target": "form" } do |form| %>
         <% if @cv_generation.errors.any? %>
           <div class="bg-red-50 p-4 rounded-md">
             <h2 class="text-red-800 text-sm font-medium">
@@ -43,18 +43,18 @@
               </button>
               <div data-dropdown-target="menu" 
                    class="absolute left-0 mt-1 w-40 bg-white border rounded-md shadow-lg hidden z-50">
-                <button type="button" data-action="editor#toggleHeading" data-level="1" 
+                <button type="button" data-action="cv-editor#toggleHeading" data-level="1" 
                         class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 1</button>
-                <button type="button" data-action="editor#toggleHeading" data-level="2"
+                <button type="button" data-action="cv-editor#toggleHeading" data-level="2"
                         class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 2</button>
-                <button type="button" data-action="editor#toggleHeading" data-level="3"
+                <button type="button" data-action="cv-editor#toggleHeading" data-level="3"
                         class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">Heading 3</button>
               </div>
             </div>
 
             <div class="h-6 w-px bg-gray-200 mx-1"></div>
 
-            <button type="button" data-action="editor#toggleBold" 
+            <button type="button" data-action="cv-editor#toggleBold" 
                     class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Bold">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"></path>
@@ -62,7 +62,7 @@
               </svg>
             </button>
 
-            <button type="button" data-action="editor#toggleItalic"
+            <button type="button" data-action="cv-editor#toggleItalic"
                     class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Italic">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <line x1="19" y1="4" x2="10" y2="4"></line>
@@ -73,7 +73,7 @@
 
             <div class="h-6 w-px bg-gray-200 mx-1"></div>
 
-            <button type="button" data-action="editor#insertTwoColumnTable" 
+            <button type="button" data-action="cv-editor#insertTwoColumnTable" 
                     class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Insert Table">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -83,7 +83,7 @@
             <div class="h-6 w-px bg-gray-200 mx-1"></div>
 
             <%# Variable picker %>
-            <button type="button" data-action="editor#showVariablePicker"
+            <button type="button" data-action="cv-editor#showVariablePicker"
                     class="p-1.5 rounded hover:bg-gray-100 transition-colors" title="Insert Variable">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
@@ -94,9 +94,9 @@
           </div>
 
           <%# Editor Content %>
-          <div data-editor-target="element" class="prose max-w-none border rounded-b min-h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
-          <%= form.text_area :generated_html, data: { "editor-target": "input" }, class: "hidden", value: @cv_generation.generated_html %>
-          <input type="file" accept="image/*" data-editor-target="fileInput" style="display:none" data-action="change->editor#handleFileUpload">
+          <div data-cv-editor-target="element" class="prose max-w-none border rounded-b min-h-[297mm] ps-[20mm] py-[10mm] pe-[10mm] bg-white"></div>
+          <%= form.text_area :generated_html, data: { "cv-editor-target": "input" }, class: "hidden", value: @cv_generation.generated_html %>
+          <input type="file" accept="image/*" data-cv-editor-target="fileInput" style="display:none" data-action="change->cv-editor#handleFileUpload">
         </div>
 
         <div>
@@ -106,7 +106,7 @@
 
         <div class="flex justify-end gap-4">
           <%= link_to "Cancel", cv_generator_path(@cv_generation.cv_candidate), class: "px-4 py-2 border rounded-md hover:bg-gray-50" %>
-          <button type="button" data-action="editor#save" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save Changes</button>
+          <button type="button" data-action="cv-editor#save" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save Changes</button>
         </div>
       <% end %>
     </div>
@@ -170,7 +170,7 @@
   outline: 2px solid #3b82f6;
 }
 
-/* Styles for variables in editor */
+/* Styles for variables in cv-editor */
 .cv-variable {
   background-color: #e3f2fd !important;
   padding: 2px 6px !important;

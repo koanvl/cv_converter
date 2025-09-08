@@ -4,19 +4,28 @@ class CvCandidate < ApplicationRecord
 
   has_many :cv_generations, dependent: :destroy
 
+  def parsed_structured_data
+    return {} if structured_data.nil?
+    return structured_data if structured_data.is_a?(Hash)
+
+    JSON.parse(structured_data)
+  rescue JSON::ParserError
+    {}
+  end
+
   def projects
-    structured_data&.dig("projects") || []
+    parsed_structured_data["projects"] || []
   end
 
   def skills_qualifications
-    structured_data&.dig("skills_qualifications") || []
+    parsed_structured_data["skills_qualifications"] || []
   end
 
   def languages
-    structured_data&.dig("languages") || []
+    parsed_structured_data["languages"] || []
   end
 
   def current_role
-    structured_data&.dig("current_role")
+    parsed_structured_data["current_role"]
   end
 end

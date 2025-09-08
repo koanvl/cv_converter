@@ -61,99 +61,539 @@
 <script>
 function loadSampleData() {
   const sampleData = {
-    "name": "John Smith",
-    "current_role": "Full Stack Developer",    
-    "projects": [
-      {
-        "id": "project_1",
-        "title": "E-commerce Platform",
-        "rows": [
-          {
-            "title": "Project name",
-            "description": "Online Store"
-          },
-          {
-            "title": "Overview",
-            "description": "Built a modern e-commerce platform using React and Node.js with microservices architecture. Implemented payment processing, inventory management, and real-time order tracking."
-          },
-          {
-            "title": "Technologies",
-            "description": "React, Node.js, MongoDB, Docker, Kubernetes"
-          },
-          {
-            "title": "Role",
-            "description": "Lead Full Stack Developer"
-          },
-          {
-            "title": "Common tasks",
-            "description": "• Develop frontend components\n• Design and implement APIs\n• Optimize application performance\n• Lead development team\n• Code reviews and mentoring"
-          },
-          {
-            "title": "Duration",
-            "description": "18 months"
-          }
-        ]
-      },
-      {
-        "id": "project_2",
-        "title": "Analytics Dashboard",
-        "rows": [
-          {
-            "title": "Project name",
-            "description": "Business Intelligence Tool"
-          },
-          {
-            "title": "Overview",
-            "description": "Created a real-time analytics dashboard for business metrics visualization. Implemented data processing pipeline and interactive charts."
-          },
-          {
-            "title": "Technologies",
-            "description": "Vue.js, TypeScript, GraphQL, PostgreSQL, Redis, AWS"
-          },
-          {
-            "title": "Role",
-            "description": "Senior Full Stack Developer"
-          },
-          {
-            "title": "Common tasks",
-            "description": "• Design system architecture\n• Implement data visualization\n• Optimize database queries\n• Set up CI/CD pipelines\n• Performance monitoring"
-          },
-          {
-            "title": "Duration",
-            "description": "12 months"
-          }
-        ]
-      }
-    ],
-    "languages": [
-      {
-        "title": "English",
-        "level": "Native"
-      },
-      {
-        "title": "Spanish",
-        "level": "Professional"
-      }
-    ],
-    "skills_qualifications": [
-      {
-        "title": "Frontend Development",
-        "description": "React, Vue.js, TypeScript, HTML5, CSS3"
-      },
-      {
-        "title": "Backend Development",
-        "description": "Node.js, GraphQL, REST APIs"
-      },
-      {
-        "title": "Database Technologies",
-        "description": "PostgreSQL, MongoDB, Redis"
-      },
-      {
-        "title": "DevOps & Cloud",
-        "description": "Docker, Kubernetes, AWS"
-      }
-    ]
-  };
+  "certifications": [
+    {
+      "title": "Google Cloud",
+      "description": "3 badges, 26 labs - Profile"
+    },
+    {
+      "title": "Algorithms and Data Structures Course",
+      "description": "Issued by Robotdreams.cc"
+    },
+    {
+      "title": "Advanced English Course",
+      "description": "Issued by EnglishDom - Upper-Intermediate course"
+    },
+    {
+      "title": "Intermediate English Course",
+      "description": "Issued by EnglishDom"
+    },
+    {
+      "title": "Pre-Intermediate English Course",
+      "description": "Issued by EnglishDom"
+    }
+  ],
+  "key_technologies": [
+    {
+      "title": "Node.js",
+      "description": "6 years"
+    },
+    {
+      "title": "JavaScript",
+      "description": "6 years"
+    },
+    {
+      "title": "TypeScript",
+      "description": "4 years"
+    },
+    {
+      "title": "PostgreSQL",
+      "description": "4 years"
+    },
+    {
+      "title": "AWS",
+      "description": "3 years"
+    }
+  ],
+  "name": "Eduard S.",
+  "current_role": "Middle+ Node.js back-end developer",
+  "experience": [
+    {
+      "company": "Brightgrove (07 2023 – 04 2025)",
+      "position": "Middle+ Node.js back-end developer"
+    },
+    {
+      "company": "Altamira as GBKSOFT (10 2021 – 07 2023)",
+      "position": "Middle+ Node.js back-end developer"
+    },
+    {
+      "company": "CodeIT LLC (02 2019 – 08 2021)",
+      "position": "Full-stack developer"
+    },
+    {
+      "company": "Perfectorium (10 2018 – 02 2019)",
+      "position": "Back-end developer"
+    },
+    {
+      "company": "Freelance (04 2018 – 07 2018)",
+      "position": "Junior back-end developer"
+    },
+    {
+      "company": "Freelance (11 2017 – 03 2018)",
+      "position": "Junior back-end developer"
+    }
+  ],
+  "projects": [
+    {
+      "id": "project_1",
+      "title": "Project #1",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Comprehensive software solution for a major premium cinema chain"
+        },
+        {
+          "title": "Overview",
+          "description": "This comprehensive software solution for a major premium cinema chain includes a cash desk system, CRM, website, mobile apps, Tizen and Android TV applications, and other internal subsystems. It features a modular architecture for scalability, real-time inventory management, and complex booking and payment integrations."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, TypeScript, Postgres, AWS, Docker, Fastify, GraphQL, Nest.js, GRPC, Kubernetes, Gitlab, PL pgSQL, TypeORM, Salesforce Marketing Cloud, Salesforce API, Saga, RxJS, Helm, MongoDB, Swagger"
+        },
+        {
+          "title": "Role",
+          "description": "Middle+ Node.js back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Development\n• Provide technical and business logic solutions\n• Communication with product owner and client team\n• Writing documentation\n• Helping with deploying to each environment\n• Refactoring and optimizations\n• Helping with application architecture\n• Test coverage"
+        },
+        {
+          "title": "Duration",
+          "description": "1 year 9 months"
+        }
+      ]
+    },
+    {
+      "id": "project_2",
+      "title": "Project #2",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Chrome Extension for WhatsApp contact management"
+        },
+        {
+          "title": "Overview",
+          "description": "It is a Chrome Extension that gives you seamless control over one of your business’s most valuable assets — your customers’ contact information. Designed for WhatsApp status influencers and businesses that use WhatsApp to communicate, it lets you instantly save unknown contacts to your phone, export your entire contact list, and chat easily with any WhatsApp-registered number."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, TypeScript, MySQL, AWS, Docker, Stripe, Lemon Squeezy, Express.js, Gitlab, Twilio, Swagger"
+        },
+        {
+          "title": "Role",
+          "description": "Middle+ Node.js back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Development\n• Describing architectural diagrams and schemas\n• Writing documentation\n• Helping with deploying to each environment\n• Refactoring and optimizations\n• Helping with application architecture\n• Test coverage\n• Migration from one payment gateway to the other"
+        },
+        {
+          "title": "Duration",
+          "description": "8 months"
+        }
+      ]
+    },
+    {
+      "id": "project_3",
+      "title": "Project #3",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Multi-menu compatible point of sales system"
+        },
+        {
+          "title": "Overview",
+          "description": "It is our easy-to-use multi-menu compatible point of sales system which allows you to manage and punch in your orders for dine in, delivery and pickup orders being placed through the phone or aggregators that are not integrated with this system."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, TypeScript, MongoDB, MongoDB Realm, AWS, PDFKit, Express.js, Jest, Gitlab"
+        },
+        {
+          "title": "Role",
+          "description": "Middle+ Node.js back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Development\n• Describing architectural diagrams and schemas\n• Writing documentation\n• Helping with deploying to each environment\n• Refactoring and optimizations\n• Helping with application architecture\n• Test coverage"
+        },
+        {
+          "title": "Duration",
+          "description": "12 months"
+        },
+        {
+          "title": "Additional Row",
+          "description": "Additional row description"
+        }
+      ]
+    },
+    {
+      "id": "project_4",
+      "title": "Project #4",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Insurance broker and plan finder service"
+        },
+        {
+          "title": "Overview",
+          "description": "This is a service that allows American citizens to find the best insurance broker and the best insurance plan for their home, car, boat, etc."
+        },
+        {
+          "title": "Technologies",
+          "description": "Docker, Express.js, MongoDB, Redis, PostgreSQL, AWS S3, Angular"
+        },
+        {
+          "title": "Role",
+          "description": "Full-stack developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for frontend and backend sides\n• Writing integration tests\n• Participation in the construction of the server architecture of the application"
+        },
+        {
+          "title": "Duration",
+          "description": "4 months"
+        }
+      ]
+    },
+    {
+      "id": "project_5",
+      "title": "Project #5",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Chat-bot platform MVP"
+        },
+        {
+          "title": "Overview",
+          "description": "Creation of the MVP for a new chat-bot platform that allows creating chatbots for any website and can be managed by the admin panel."
+        },
+        {
+          "title": "Technologies",
+          "description": "React.js, Redux, Docker, Express.js, MySQL, Socket.IO, Gitlab CI CD, Node.js, Gulp"
+        },
+        {
+          "title": "Role",
+          "description": "Full-stack developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for frontend and backend sides\n• Redesigning frontend side\n• Migrating to the newest React.js version\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it\n• Setting up the Gitlab CI CD"
+        },
+        {
+          "title": "Duration",
+          "description": "7 months"
+        }
+      ]
+    },
+    {
+      "id": "project_6",
+      "title": "Project #6",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Location-based social search mobile application"
+        },
+        {
+          "title": "Overview",
+          "description": "Location-based social search mobile application that facilitates communication between mutually interested users, allowing matched users to chat."
+        },
+        {
+          "title": "Technologies",
+          "description": "PHP, PostgreSQL, PostGIS, Redis, Memcached, Facebook API, Google Geocode API, Firebase push notifications, APNS push notifications, AWS"
+        },
+        {
+          "title": "Role",
+          "description": "Back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Adding new features\n• Troubleshooting bugs\n• Helping to optimize database performance\n• Helping with CI CD setup"
+        },
+        {
+          "title": "Duration",
+          "description": "1 month"
+        }
+      ]
+    },
+    {
+      "id": "project_7",
+      "title": "Project #7",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Real-time planner for scheduling and managing teams"
+        },
+        {
+          "title": "Overview",
+          "description": "It is a real-time planner for scheduling and managing teams and resources."
+        },
+        {
+          "title": "Technologies",
+          "description": "HTML5, CSS3, SASS, JavaScript, TypeScript, Angular 5+, Keycloak SSO, Express.js, MySQL, Socket.IO"
+        },
+        {
+          "title": "Role",
+          "description": "Back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for frontend and backend sides\n• Redesigning frontend side\n• Migrating to the newest Angular framework version\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it\n• Setting up the Gitlab CI CD\n• Helping with SSO setup"
+        },
+        {
+          "title": "Duration",
+          "description": "12 months"
+        }
+      ]
+    },
+    {
+      "id": "project_8",
+      "title": "Project #8",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Medical information management app"
+        },
+        {
+          "title": "Overview",
+          "description": "Medical information management app allows the user to collaborate efficiently when tracking and sharing important health information."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, TypeScript, PostgreSQL, Firebase, AWS"
+        },
+        {
+          "title": "Role",
+          "description": "Back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for backend sides\n• Code refactoring\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it\n• Setting up the Gitlab CI CD\n• Helping with building the application architecture\n• Helping with HIPPA compliance"
+        },
+        {
+          "title": "Duration",
+          "description": "10 months"
+        }
+      ]
+    },
+    {
+      "id": "project_9",
+      "title": "Project #9",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Client and Vendor iOS applications"
+        },
+        {
+          "title": "Overview",
+          "description": "Client and Vendor is a pair of iOS applications to connect a towing truck driver as a services vendor with a motorist, who needs a hand on a roadside."
+        },
+        {
+          "title": "Technologies",
+          "description": "PostgreSQL, PostGIS, Docker, Node.js, TypeScript, Swagger, Ubuntu Server, bash"
+        },
+        {
+          "title": "Role",
+          "description": "Back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for backend sides\n• Code refactoring\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it\n• Helping with building the application architecture"
+        },
+        {
+          "title": "Duration",
+          "description": "2 months"
+        }
+      ]
+    },
+    {
+      "id": "project_10",
+      "title": "Project #10",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "E-commerce video player application"
+        },
+        {
+          "title": "Overview",
+          "description": "It is a player that can be spread across the internet by providing URL containing the video image files and a predefined list of items from the Shopify marketplace."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, TypeScript, PostgreSQL, MongoDB, MySQL, Angular"
+        },
+        {
+          "title": "Role",
+          "description": "Back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for backend sides\n• Code refactoring\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it\n• Completely cover the entire application with integration tests from scratch"
+        },
+        {
+          "title": "Duration",
+          "description": "2 months"
+        }
+      ]
+    },
+    {
+      "id": "project_11",
+      "title": "Project #11",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Parser for online stores"
+        },
+        {
+          "title": "Overview",
+          "description": "The parser allows extracting the information about the goods from online stores and other resources."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, MySQL, Redis, JavaScript, Nginx, Selenium WebDriver"
+        },
+        {
+          "title": "Role",
+          "description": "Junior back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for backend sides\n• Code refactoring\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it"
+        },
+        {
+          "title": "Duration",
+          "description": "4 months"
+        }
+      ]
+    },
+    {
+      "id": "project_12",
+      "title": "Project #12",
+      "rows": [
+        {
+          "title": "Project name",
+          "description": "Web application for managing parsed data"
+        },
+        {
+          "title": "Overview",
+          "description": "The web application allows to conveniently work with the data received from the parser, manage information about products, track the process of parsing data and access a large database with information about products."
+        },
+        {
+          "title": "Technologies",
+          "description": "Node.js, TypeScript, Vue.js, HTML5, Swagger, CSS"
+        },
+        {
+          "title": "Role",
+          "description": "Junior back-end developer"
+        },
+        {
+          "title": "Common tasks",
+          "description": "• Writing code for backend sides\n• Code refactoring\n• Maintaining the server-side Linux server\n• Deploying the application to the server\n• Launching and configuring it"
+        },
+        {
+          "title": "Duration",
+          "description": "5 months"
+        }
+      ]
+    }
+  ],
+  "common_description_1": "6 years in backend development with Node.js, TypeScript and various databases",
+  "common_description_2": "Expertise in Node.js, Nest.js, Express.js, TypeScript, AWS, PostgreSQL, Docker and GraphQL",
+  "common_description_3": "Highly adaptable and quick to learn",
+  "common_description_4": "Effective communicator and goal-oriented",
+  "common_description_5": "Location - Ukraine",
+  "languages": [
+    {
+      "title": "Ukrainian",
+      "level": "Native"
+    },
+    {
+      "title": "English",
+      "level": "Upper-Intermediate"
+    }
+  ],
+  "skills_qualifications": [
+    {
+      "title": "Programming Languages",
+      "description": "Node.js, JavaScript, TypeScript, Python, PHP, Golang, Bash, SQL, AMPScript"
+    },
+    {
+      "title": "Backend Frameworks",
+      "description": "Nest.js, Express.js, Sails.js, Fastify"
+    },
+    {
+      "title": "Databases",
+      "description": "PostgreSQL, MongoDB, MySQL, Redis, SQLite, MongoDB Realm, Elasticsearch, Firebase"
+    },
+    {
+      "title": "Cloud Providers",
+      "description": "AWS, Google Cloud"
+    },
+    {
+      "title": "APIs and Protocols",
+      "description": "REST API, gRPC, GraphQL, jRPC"
+    },
+    {
+      "title": "Containerization and Orchestration",
+      "description": "Docker, Docker-compose, Kubernetes (K3s)"
+    },
+    {
+      "title": "CI/CD Tools",
+      "description": "Gitlab CI/CD"
+    },
+    {
+      "title": "Testing Frameworks",
+      "description": "Playwright, Selenium WebDriver, Chai, Mocha, Jasmine, Jest"
+    },
+    {
+      "title": "Frontend Technologies",
+      "description": "HTML, CSS, Angular.js, Angular 5+, Vue.js, React.js, Redux, jQuery, SASS"
+    },
+    {
+      "title": "Other Technologies",
+      "description": "Apache Kafka, WebSockets, PostGIS, Helm, ZMQ, Vagrant, JWT, Swagger, Saga, RxJS"
+    },
+    {
+      "title": "Embedded Systems",
+      "description": "Embedded systems (Rockchip, ARM, u-boot), ONNXRuntime, CoreML"
+    },
+    {
+      "title": "Payment Processing",
+      "description": "Stripe, Lemon Squeezy, Liqpay"
+    },
+    {
+      "title": "Version Control Systems",
+      "description": "Git"
+    },
+    {
+      "title": "Operating Systems",
+      "description": "*nix systems"
+    }
+  ],
+  "education": [
+    {
+      "name": "Dnepropetrovsk College of Radioelectronics",
+      "years": "2013 – 2017",
+      "specialization": "172 Telecommunications and Radio Engineering"
+    },
+    {
+      "name": "Kharkiv National University of Radioelectronics",
+      "years": "2017 – 2020",
+      "specialization": "172 Telecommunications and Radio Engineering"
+    },
+    {
+      "name": "Kharkiv National University of Radioelectronics",
+      "years": "2020 – 2021",
+      "specialization": "172 Telecommunications and Radio Engineering"
+    }
+  ],
+  "keywords": "Ruby, Python, CoffeeScript, TypeScript, CSS, Ruby on Rails, VCR gem, Django, Pandas, Matplotlib, Keras, TensorFlow, ReactJS, VueJS, AngularJS, Tailwind",
+  "experience_years": "4 years",
+  "english_level": "Intermediate",
+  "location": "Ukraine", 
+};
   
   document.querySelector('#cv_candidate_structured_data').value = JSON.stringify(sampleData, null, 2);
 }
