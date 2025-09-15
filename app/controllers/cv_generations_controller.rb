@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CvGenerationsController < ApplicationController
-  before_action :set_cv_generation, only: [ :show, :edit, :update, :edit_content, :download_docx ]
+  before_action :set_cv_generation, only: [ :show, :edit, :update, :edit_content, :download_docx, :download_docx_pandoc ]
 
   def show
     # Показать сгенерированное резюме в полном размере
@@ -9,6 +9,17 @@ class CvGenerationsController < ApplicationController
 
   def download_docx
     docx_content = HtmlToDocxConverter.convert(@cv_generation.generated_html, @cv_generation.generated_css)
+    send_data docx_content,
+              filename: "#{@cv_generation.cv_candidate.name.parameterize}_resume.docx",
+              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  end
+
+  def download_docx_pandoc
+    docx_content = PandocConverter.html_to_docx(
+      @cv_generation.generated_html,
+      @cv_generation.generated_css
+    )
+
     send_data docx_content,
               filename: "#{@cv_generation.cv_candidate.name.parameterize}_resume.docx",
               type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
