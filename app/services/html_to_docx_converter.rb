@@ -28,37 +28,37 @@ class HtmlToDocxConverter
       # Set default document styles
       # Set default styles
       docx.style do
-        id              "Normal"
-        name            "Normal"
-        font            "Arial"
-        size            24  # Default size for 12px
-        line            240
-        color           "000000"
+        id           "Normal"
+        name         "Normal"
+        font         "Arial"
+        size         24  # Default size for 12px
+        line         240
+        color        "000000"
       end
 
       # Set heading styles with minimal defaults - actual sizes will be set per-paragraph
       docx.style do
-        id              "Heading1"
-        name            "heading 1"
-        font            "Arial"
-        bold            true
-        line            360
+        id           "Heading1"
+        name         "heading 1"
+        font         "Arial"
+        bold         true
+        line         360
       end
 
       docx.style do
-        id              "Heading2"
-        name            "heading 2"
-        font            "Arial"
-        bold            true
-        line            320
+        id           "Heading2"
+        name         "heading 2"
+        font         "Arial"
+        bold         true
+        line         320
       end
 
       docx.style do
-        id              "Heading3"
-        name            "heading 3"
-        font            "Arial"
-        bold            true
-        line            280
+        id           "Heading3"
+        name         "heading 3"
+        font         "Arial"
+        bold         true
+        line         280
       end
 
       # Process content
@@ -123,12 +123,17 @@ class HtmlToDocxConverter
     when "div"
       # Check if this div should be converted to a table
       if should_convert_to_table?(node)
+        # NEW: Extract border color or use default
+        border_color = extract_border_color(node) || "666666"
+
         # Check if we can combine with next similar divs
         similar_divs = collect_similar_flex_divs(node)
         if similar_divs.any?
-          convert_multiple_divs_to_table(similar_divs, docx)
+          # MODIFIED: Pass border_color to the method
+          convert_multiple_divs_to_table(similar_divs, docx, border_color: border_color)
         else
-          convert_div_to_table(node, docx)
+          # MODIFIED: Pass border_color to the method
+          convert_div_to_table(node, docx, border_color: border_color)
         end
       else
         # Process div content normally
@@ -280,17 +285,32 @@ class HtmlToDocxConverter
     parts
   end
 
+  # MODIFIED HELPER
   def convert_color(color)
     case color
     when /^#([0-9a-fA-F]{6})$/
-      $1
+      $1 # Return 6-digit hex
     when /^#([0-9a-fA-F]{3})$/
-      "#{$1[0]}#{$1[0]}#{$1[1]}#{$1[1]}#{$1[2]}#{$1[2]}"
+      $1.chars.map { |c| c * 2 }.join # Convert 3-digit to 6-digit
     when /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/
-      sprintf("%02x%02x%02x", $1.to_i, $2.to_i, $3.to_i)
+      sprintf("%02x%02x%02x", $1.to_i, $2.to_i, $3.to_i) # Convert RGB to hex
     else
-      color
+      nil # Return nil if format is unknown
     end
+  end
+
+  # NEW HELPER
+  def extract_border_color(node)
+    # Find the first child element with 'border' in its style
+    element_with_border = node.at_css('[style*="border"]')
+    style_string = element_with_border&.[]("style")
+    return nil unless style_string
+
+    # Extract the color value (rgb or hex)
+    match = style_string.match(/(?:border|border-color):\s*.*?((?:rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|#[0-9a-fA-F]{3,6}))/i)
+    return nil unless match
+
+    convert_color(match[1])
   end
 
   def should_convert_to_table?(node)
@@ -334,22 +354,24 @@ class HtmlToDocxConverter
     docx.p # Add space after table
   end
 
-  def convert_div_to_table(node, docx)
+  # MODIFIED METHOD
+  def convert_div_to_table(node, docx, border_color: "666666")
     # Convert grid/flex layout to table structure
     items = node.css("> div")
     return if items.empty?
 
     # Determine table structure based on layout type
     if is_flex_container?(node)
-      convert_flex_to_table(node, items, docx)
+      convert_flex_to_table(node, items, docx, border_color: border_color)
     else
-      convert_grid_to_table(node, items, docx)
+      convert_grid_to_table(node, items, docx, border_color: border_color)
     end
 
     docx.p # Add space after table
   end
 
-  def convert_flex_to_table(node, items, docx)
+  # MODIFIED METHOD
+  def convert_flex_to_table(node, items, docx, border_color: "666666")
     # Determine if flex is row or column oriented
     style = node["style"].to_s
     flex_direction = style =~ /flex-direction:\s*column/ ? :column : :row
@@ -360,7 +382,7 @@ class HtmlToDocxConverter
       row_data = items.map { |item| item.text.strip }
 
       docx.table [ row_data ] do
-        border_color   "666666"
+        border_color   border_color
         border_line    :single
         border_size    4
         border_spacing 0
@@ -371,7 +393,7 @@ class HtmlToDocxConverter
       rows_data = items.map { |item| [ item.text.strip ] }
 
       docx.table rows_data do
-        border_color   "666666"
+        border_color   border_color
         border_line    :single
         border_size    4
         border_spacing 0
@@ -379,7 +401,8 @@ class HtmlToDocxConverter
     end
   end
 
-  def convert_grid_to_table(node, items, docx)
+  # MODIFIED METHOD
+  def convert_grid_to_table(node, items, docx, border_color: "666666")
     # Determine table structure (2 columns by default)
     cols = 2
     if node["style"]&.match?(/grid-cols-(\d+)/)
@@ -392,7 +415,7 @@ class HtmlToDocxConverter
     end
 
     docx.table rows_data do
-      border_color   "666666"
+      border_color   border_color
       border_line    :single
       border_size    4
       border_spacing 0
@@ -451,7 +474,8 @@ class HtmlToDocxConverter
     columns.map { |col| col["class"] }.join("|")
   end
 
-  def convert_multiple_divs_to_table(divs, docx)
+  # MODIFIED METHOD
+  def convert_multiple_divs_to_table(divs, docx, border_color: "666666")
     # Extract data from each div
     rows_data = divs.map do |div|
       # Find the flex container with the actual columns
@@ -464,7 +488,7 @@ class HtmlToDocxConverter
 
     # Create a single table with all rows
     docx.table rows_data do
-      border_color   "666666"
+      border_color   border_color
       border_line    :single
       border_size    4
       border_spacing 0
