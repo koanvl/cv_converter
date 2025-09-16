@@ -2,16 +2,16 @@
 
 class HtmlToDocxConverter
   FONT_SIZE_MAP = {
-    11 => 8,   # 11px -> 8pt
-    12 => 9,   # 12px -> 9pt
-    13 => 10,   # 13px -> 10pt
-    15 => 11,   # 15px -> 11pt
-    16 => 12,   # 16px -> 12pt
-    19 => 14,   # 19px -> 14pt
-    21 => 16,   # 21px -> 16pt
-    24 => 18,   # 24px -> 18pt
-    27 => 20,   # 27px -> 20pt
-    32 => 24    # 32px -> 24pt
+    11 => 11,   # 11px -> 11pt
+    12 => 12,   # 12px -> 12pt
+    13 => 13,   # 13px -> 13pt
+    15 => 15,   # 15px -> 15pt
+    16 => 16,   # 16px -> 16pt
+    19 => 19,   # 19px -> 19pt
+    21 => 21,   # 21px -> 21pt
+    24 => 24,   # 24px -> 24pt
+    27 => 27,   # 27px -> 27pt
+    32 => 32    # 32px -> 32pt
   }.freeze
 
   def self.convert(html_content, css_content = nil)
@@ -26,12 +26,39 @@ class HtmlToDocxConverter
   def convert
     Caracal::Document.save "temp.docx" do |docx|
       # Set default document styles
+      # Set default styles
       docx.style do
         id              "Normal"
         name            "Normal"
         font            "Arial"
-        size            32  # Default size for 16px
+        size            24  # Default size for 12px
         line            240
+        color           "000000"
+      end
+
+      # Set heading styles with minimal defaults - actual sizes will be set per-paragraph
+      docx.style do
+        id              "Heading1"
+        name            "heading 1"
+        font            "Arial"
+        bold            true
+        line            360
+      end
+
+      docx.style do
+        id              "Heading2"
+        name            "heading 2"
+        font            "Arial"
+        bold            true
+        line            320
+      end
+
+      docx.style do
+        id              "Heading3"
+        name            "heading 3"
+        font            "Arial"
+        bold            true
+        line            280
       end
 
       # Process content
@@ -50,20 +77,31 @@ class HtmlToDocxConverter
   def process_node(node, docx)
     case node.name
     when "h1", "h2", "h3"
-      style_options = extract_styles(node)
-      text = node.text.strip
+      # Extract font size from the first span if present
+      first_span = node.at_css('span[style*="font-size"]')
+      font_size = if first_span && first_span["style"] =~ /font-size:\s*(\d+)px/
+        $1.to_i
+      else
+        case node.name
+        when "h1" then 24  # Default h1 size
+        when "h2" then 20  # Default h2 size
+        when "h3" then 16  # Default h3 size
+        end
+      end
+
+      # Convert px to pt
+      pt_size = map_font_size(font_size)
       case node.name
       when "h1"
-        docx.h1 text, style_options.merge(size: 48)  # 24px
+        process_styled_paragraph(docx, :h1, node, size: pt_size)
       when "h2"
-        docx.h2 text, style_options.merge(size: 40)  # 20px
+        process_styled_paragraph(docx, :h2, node, size: pt_size)
       when "h3"
-        docx.h3 text, style_options.merge(size: 32)  # 16px
+        process_styled_paragraph(docx, :h3, node, size: pt_size)
       end
     when "p"
       if node.text.strip.present?
-        style_options = extract_styles(node)
-        docx.p node.text.strip, style_options
+        process_styled_paragraph(docx, :p, node)
       else
         docx.p
       end
@@ -120,44 +158,12 @@ class HtmlToDocxConverter
   def extract_styles(node)
     styles = {}
 
-    if node["style"]
-      style_string = node["style"]
+    # Process style attribute
+    process_style_attribute(node["style"], styles) if node["style"]
 
-      # Font size
-      if style_string =~ /font-size:\s*(\d+)px/
-        px_size = $1.to_i
-        styles[:size] = map_font_size(px_size)
-      end
-
-      # Font weight
-      if style_string =~ /font-weight:\s*(bold|700|800|900)/
-        styles[:bold] = true
-      end
-
-      # Font style
-      if style_string =~ /font-style:\s*italic/
-        styles[:italic] = true
-      end
-
-      # Text decoration
-      if style_string =~ /text-decoration:\s*underline/
-        styles[:underline] = true
-      end
-      if style_string =~ /text-decoration:\s*line-through/
-        styles[:strike] = true
-      end
-
-      # Text alignment
-      if style_string =~ /text-align:\s*(left|center|right|justify)/
-        styles[:align] = $1.to_sym
-      end
-
-      # Text color
-      if style_string =~ /color:\s*#([0-9a-fA-F]{6})/
-        styles[:color] = $1
-      elsif style_string =~ /color:\s*rgb\((\d+),\s*(\d+),\s*(\d+)\)/
-        styles[:color] = sprintf("%02x%02x%02x", $1.to_i, $2.to_i, $3.to_i)
-      end
+    # Process nested spans with styles
+    node.css("span[style]").each do |span|
+      process_style_attribute(span["style"], styles)
     end
 
     # Check for nested styles
@@ -169,9 +175,109 @@ class HtmlToDocxConverter
     styles
   end
 
+  def process_style_attribute(style_string, styles)
+    return unless style_string
+
+    # Font size
+    if style_string =~ /font-size:\s*(\d+)px/
+      px_size = $1.to_i
+      styles[:size] = map_font_size(px_size)
+    end
+
+    # Font weight
+    if style_string =~ /font-weight:\s*(bold|700|800|900)/
+      styles[:bold] = true
+    end
+
+    # Font style
+    if style_string =~ /font-style:\s*italic/
+      styles[:italic] = true
+    end
+
+    # Text decoration
+    if style_string =~ /text-decoration:\s*underline/
+      styles[:underline] = true
+    end
+    if style_string =~ /text-decoration:\s*line-through/
+      styles[:strike] = true
+    end
+
+    # Text alignment
+    if style_string =~ /text-align:\s*(left|center|right|justify)/
+      styles[:align] = $1.to_sym
+    end
+
+    # Text color
+    if style_string =~ /color:\s*#([0-9a-fA-F]{6})/
+      styles[:color] = $1
+    elsif style_string =~ /color:\s*rgb\((\d+),\s*(\d+),\s*(\d+)\)/
+      r, g, b = $1.to_i, $2.to_i, $3.to_i
+      styles[:color] = sprintf("%02x%02x%02x", r, g, b)
+    end
+  end
+
   def map_font_size(px_size)
-    # Find the closest size in our map
-    FONT_SIZE_MAP.min_by { |px, _pt| (px - px_size).abs }[1]
+    # Convert px to pt directly (1px = 0.75pt)
+    ((px_size * 0.75)*2).round
+  end
+
+  def process_styled_paragraph(docx, type, node, base_styles = {})
+    # Collect all text parts with their styles
+    parts = collect_text_parts(node, base_styles)
+
+    # Create paragraph and add styled text parts
+    case type
+    when :h1
+      docx.h1 do |p|
+        parts.each do |text, styles|
+          p.text(text, styles.except(:size)) unless text.empty?
+        end
+      end
+    when :h2
+      docx.h2 do |p|
+        parts.each do |text, styles|
+          p.text(text, styles.except(:size)) unless text.empty?
+        end
+      end
+    when :h3
+      docx.h3 do |p|
+        parts.each do |text, styles|
+          p.text(text, styles.except(:size)) unless text.empty?
+        end
+      end
+    else
+      docx.p do |p|
+        parts.each do |text, styles|
+          p.text(text, styles) unless text.empty?
+        end
+      end
+    end
+  end
+
+  def collect_text_parts(node, base_styles = {})
+    parts = []
+
+    node.children.each do |child|
+      if child.text?
+        # If it's a pure text node, use parent styles
+        text = child.text.strip
+        parts << [ text, base_styles ] unless text.empty?
+      elsif child.element?
+        # For elements, combine their styles with parent styles
+        child_styles = base_styles.merge(extract_styles(child))
+
+        if child.children.empty?
+          # If it's a leaf node, add its text with combined styles
+          text = child.text.strip
+          parts << [ text, child_styles ] unless text.empty?
+        else
+          # If it has children, process them recursively
+          parts.concat(collect_text_parts(child, child_styles))
+        end
+      end
+    end
+
+    parts
   end
 
   def convert_color(color)
