@@ -1,24 +1,51 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-3xl font-bold">Examples</h1>
-    <%= link_to "New Example", new_example_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-  </div>
+<div class="mx-auto max-w-screen-xl">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold">Templates</h1>
+      <%= link_to "New Example", new_example_path, class: "bg-primary-700 hover:bg-primary-800 text-black font-bold py-2 px-4 rounded" %>
+    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% @examples.each do |example| %>
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="p-6">
-          <h2 class="text-xl font-semibold mb-2"><%= example.title %></h2>
-          <div class="text-gray-600 mb-4">
-            Format: <%= example.format.capitalize %>
-          </div>
-          <div class="flex justify-between items-center">
-            <%= link_to "Edit", edit_example_path(example), class: "text-blue-500 hover:text-blue-700" %>
-            <%= link_to "View", example_path(example), class: "text-green-500 hover:text-green-700" %>
-            <%= button_to "Delete", example_path(example), method: :delete, class: "text-red-500 hover:text-red-700", form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @examples.each do |example| %>
+        <div class="bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+          <div class="p-6">
+            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white"><%= example.title %></h2>
+            <div class="flex justify-between items-center">
+              <%= link_to "Edit", edit_example_path(example), class: "text-blue-500 hover:text-blue-700" %>
+              <%= link_to "View", example_path(example), class: "text-green-500 hover:text-green-700" %>
+              <%= button_to "Delete", example_path(example), method: :delete, class: "text-red-500 hover:text-red-700", form: { data: { turbo_confirm: "Are you sure?" } } %>
+            </div>
           </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+                Title
+            </th>
+            <th scope="col" class="px-6 py-3">
+                actions
+            </th>                  
+          </tr>
+        </thead>
+        <tbody>
+          <% @examples.each do |example| %>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <%= example.title %>
+            </th>
+            <td class="px-6 py-4">
+                <%= link_to "Edit", edit_example_path(example), class: "text-blue-500 hover:text-blue-700" %>
+              <%= link_to "View", example_path(example), class: "text-green-500 hover:text-green-700" %>
+              <%= button_to "Delete", example_path(example), method: :delete, class: "text-red-500 hover:text-red-700", form: { data: { turbo_confirm: "Are you sure?" } } %>
+            </td>                  
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

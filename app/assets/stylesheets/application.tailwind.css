@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import 'grapesjs/dist/css/grapes.min.css';
 
+@theme {
+  --color-primary-700: #FFF337;
+  --color-primary-800: #FDE512;
+}
+
 img[style*="text-align:center"] {
   display: block;
   margin-left: auto;
@@ -24,10 +29,6 @@ img[style*="text-align:left"] {
 
 div[role="textbox"] {
   @apply min-h-[277mm] ps-[20mm] py-[10mm] pe-[10mm]
-}
-
-body {
-  @apply bg-gray-300;
 }
 
 .table-bordered {
